@@ -1,4 +1,4 @@
-var elixir = require('laravel-elixir');
+var elixir      = require('laravel-elixir');
 
 /*
  |--------------------------------------------------------------------------
@@ -10,7 +10,26 @@ var elixir = require('laravel-elixir');
  | file for our application, as well as publishing vendor resources.
  |
  */
-
-elixir(function(mix) {
-    mix.sass('app.scss');
+var gulp        = require('gulp');
+var plugins = {
+    scripts : [
+        'components/jquery/jquery.js',
+        'components/jquery-ui/jquery-ui.min.js',
+        'twitter/bootstrap/dist/js/bootstrap.js',
+    ],
+    styles : [
+        'components/jquery-ui/jquery-ui.min.css',
+        'twitter/bootstrap/dist/css/bootstrap.min.css',
+        'fortawesome/font-awesome/css/font-awesome.min.css',
+    ]
+};
+gulp.task('default', function() {
+});
+gulp.task('watch', function() {
+    elixir(function(mix) {
+        mix
+            .styles(plugins.styles,"public/app.min.css","vendor")
+            .scripts(plugins.scripts,"public/app.min.js","vendor")
+            .less('../../../public/less/login.less', 'public/css/login.css');
+    });
 });

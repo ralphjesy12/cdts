@@ -1,0 +1,105 @@
+// out: ../css/dash.min.css, compress: true, strictMath: true
+
+
+@color0: #171717; // Appears 4 times
+@color1: #ffffff; // Appears 2 times
+
+
+
+.profile {
+    margin: 20px 0;
+}
+.profile-sidebar {
+    background: @color1;
+    padding: 20px 0 10px 0;
+    border-radius: 5px;
+    box-shadow: 1px 1px 5px rgba(0,0,0,0.5);
+}
+.profile-userpic {
+    img {
+        -moz-border-radius: 50% !important;
+        -webkit-border-radius: 50% !important;
+        border-radius: 50% !important;
+        float: none;
+        height: 50%;
+        margin: 0 auto;
+        width: 50%;
+    }
+}
+.profile-usertitle {
+    margin-top: 20px;
+    text-align: center;
+}
+.profile-usertitle-name {
+    font-weight: 600;
+    margin-bottom: 7px;
+
+    text-transform: uppercase;
+    font-size: 1em;
+    color: #171717;
+}
+.profile-usertitle-job {
+    color: @color0;
+    font-size: 0.8em;
+    font-weight: 600;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+}
+.profile-userbuttons {
+    margin-top: 10px;
+    text-align: center;
+    .btn {
+        font-size: 0.7em;
+        font-weight: 600;
+        margin-right: 5px;
+        padding: 6px 15px;
+        text-transform: uppercase;
+        &:last-child {
+            margin-right: 0px;
+        }
+    }
+}
+.profile-usermenu {
+    margin-top: 30px;
+    ul {
+        li {
+            border-bottom: 1px solid #f0f4f7;
+            &:last-child {
+                border-bottom: none;
+            }
+            a {
+                color: #93a3b5;
+                font-size: 0.7em;
+                font-weight: 600;
+                text-transform: uppercase;
+                i {
+                    font-size: 14px;
+                    margin-right: 8px;
+                }
+                &:hover {
+                    background-color: #fafcfd;
+                    color: @color0;
+                }
+            }
+        }
+        li.active {
+            border-bottom: none;
+            a {
+                background-color: #f6f9fb;
+                border-left: 2px solid @color0;
+                color: @color0;
+                margin-left: -2px;
+            }
+        }
+    }
+}
+.profile-content {
+    background: @color1;
+    min-height: 480px;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 1px 1px 5px rgba(0,0,0,0.5);
+    a:not(.btn){
+            color: initial;
+    }
+}

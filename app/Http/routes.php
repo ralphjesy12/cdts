@@ -14,3 +14,24 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+// Authentication routes...
+Route::get('/login', 'Auth\AuthController@getLogin');
+Route::post('/login', 'Auth\AuthController@postLogin');
+Route::get('/logout', 'Auth\AuthController@getLogout');
+
+// Registration routes...
+Route::get('/register', 'Auth\AuthController@getRegister');
+Route::post('/register', 'Auth\AuthController@postRegister');
+
+// Page View Routes
+Route::get('/home', 'StaticsController@home');
+Route::get('/training', 'StaticsController@training');
+Route::get('/training/browser/{type}', 'StaticsController@browser');
+Route::get('/assessment', 'StaticsController@assessment');
+Route::get('/assessment/interactive', 'StaticsController@interactive');
+Route::get('/assessment/exams/{type}', 'StaticsController@exams');
+Route::get('/assessment/exams/{id}/{q}', 'StaticsController@qa');
+
+// Storage File
+Route::get('/module/view', 'StaticsController@ViewModule');
