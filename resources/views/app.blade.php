@@ -42,7 +42,7 @@
                         <!-- END SIDEBAR USER TITLE -->
                         <!-- SIDEBAR BUTTONS -->
                         <div class="profile-userbuttons">
-                            <button type="button" class="btn btn-danger btn-sm">Log Out</button>
+                            <a href="/logout" class="btn btn-danger btn-sm">Log Out</a>
                         </div>
                         <!-- END SIDEBAR BUTTONS -->
                         <!-- SIDEBAR MENU -->

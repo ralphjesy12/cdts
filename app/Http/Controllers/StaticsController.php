@@ -1,8 +1,10 @@
 <?php namespace App\Http\Controllers;
 use Input;
-use Request;
 use Response;
 use Storage;
+use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
+
 class StaticsController extends Controller {
 
     /*
@@ -22,6 +24,15 @@ class StaticsController extends Controller {
      *
      * @return Response
      */
+    public function __construct(Request $request)
+    {
+        //        $this->middleware('auth');
+        //        if($user = $request->user()){
+        //            dd($user->toArray());
+        //        };
+
+    }
+
     public function home()
     {
         return view('home/home');
@@ -36,10 +47,19 @@ class StaticsController extends Controller {
         if(empty($path))
             $path = '';
         else
-            $path = '\\'.$path;
-
-        $d = Storage::directories('training\\'.$type.$path);
-        $f = Storage::files('training\\'.$type.$path);
+            $path = DIRECTORY_SEPARATOR.$path;
+        
+        $d = Storage::directories('training'.DIRECTORY_SEPARATOR.$type.$path);
+        $f = Storage::files('training'.DIRECTORY_SEPARATOR.$type.$path);
+        
+        foreach($d as $k=>$v){
+            $d[$k] = str_replace('/', '\\',  $v);
+        }
+        
+        foreach($f as $k=>$v){
+            $f[$k] = str_replace('/', '\\',  $v);
+        }
+        
         return view('home/browser',[
             'dirs' => $d,
             'files' => $f,
@@ -66,8 +86,6 @@ class StaticsController extends Controller {
         }else{
             return response()->download($filepath);
         }
-
-
     }
     public function exams($type)
     {

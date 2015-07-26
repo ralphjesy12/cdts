@@ -11,13 +11,14 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+//Route::get('/', function () {
+//    return view('welcome');
+//});
 
+Route::get('/', 'Auth\AuthController@getLogin');
 // Authentication routes...
 Route::get('/login', 'Auth\AuthController@getLogin');
-Route::post('/login', 'Auth\AuthController@postLogin');
+Route::post('/login', 'Auth\AuthController@authenticate');
 Route::get('/logout', 'Auth\AuthController@getLogout');
 
 // Registration routes...

@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
+use Input;
 use Validator;
+use Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
@@ -28,6 +30,9 @@ class AuthController extends Controller
      *
      * @return void
      */
+    protected $redirectPath = '/home';
+    protected $loginPath = '/login';
+    
     public function __construct()
     {
         $this->middleware('guest', ['except' => 'getLogout']);
@@ -42,9 +47,12 @@ class AuthController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name' => 'required|max:255',
+            'username' => 'required|max:255|alpha_num',
+            'fullname' => 'required|max:255|string',
+            'gender' => 'required',
             'email' => 'required|email|max:255|unique:users',
             'password' => 'required|confirmed|min:6',
+            'reg_agree' => 'required|accepted',
         ]);
     }
 
@@ -57,9 +65,27 @@ class AuthController extends Controller
     protected function create(array $data)
     {
         return User::create([
-            'name' => $data['name'],
+            'fullname' => $data['fullname'],
+            'username' => $data['username'],
             'email' => $data['email'],
+            'gender' => $data['gender'],
+            'position' => "crew",
+            'level' => "0",
             'password' => bcrypt($data['password']),
         ]);
+    }
+	
+	public function authenticate()
+    {
+		$username = Input::get('username');
+		$password = Input::get('password');
+		$remember = Input::get('remember');
+        if (Auth::viaRemember() || Auth::attempt(['email' => $username, 'password' => $password],$remember) || 
+			Auth::attempt(['username' => $username, 'password' => $password],$remember)) {
+            // Authentication passed...
+            return redirect()->intended('/home');
+		}else{
+			return redirect()->intended('/login')->withErrors(['Username and/or Password you entered does not belong to any user']);
+		}
     }
 }

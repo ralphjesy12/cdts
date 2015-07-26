@@ -4,6 +4,7 @@
 <link href="{{ asset('css/dash.min.css') }}" rel="stylesheet">
 @endsection
 @section('content')
+
 <div class="row text-center" style="margin-bottom:30px;">
     @if($type == 'tsoc')
     <h3>TSOC - Training Station Observation Checklist</h3>
@@ -31,7 +32,7 @@
             @foreach($dirs as $d)
             <tr>
                 <td><i class="fa fa-folder-o"></i></td>
-                <td><a href="?folder={{ str_ireplace('training\\'.strtolower($type).'\\', '', $d) }}">{{ basename($d) }}</a></td>
+                <td><a href="?folder={{ str_ireplace('training'.DIRECTORY_SEPARATOR.strtolower($type).DIRECTORY_SEPARATOR, '', $d) }}">{{ basename($d) }}</a></td>
                 <td></td>
             </tr>
             @endforeach
