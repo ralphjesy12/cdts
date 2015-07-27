@@ -13,17 +13,19 @@ var elixir      = require('laravel-elixir');
 var gulp        = require('gulp');
 var plugins = {
     scripts : [
-        'components/jquery/jquery.js',
-        'components/jquery-ui/jquery-ui.min.js',
+        '../node_modules/jquery/dist/jquery.js',
+        '../node_modules/jquery-ui/jquery-ui.js',
         'twitter/bootstrap/dist/js/bootstrap.js',
+        '../node_modules/bootbox/bootbox.min.js',
     ],
     styles : [
-        'components/jquery-ui/jquery-ui.min.css',
+        '../node_modules/jquery-ui/themes/ui-lightness/jquery-ui.min.css',
         'twitter/bootstrap/dist/css/bootstrap.min.css',
         'fortawesome/font-awesome/css/font-awesome.min.css',
     ]
 };
 gulp.task('default', function() {
+	
 });
 gulp.task('watch', function() {
     elixir(function(mix) {

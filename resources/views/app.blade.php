@@ -33,10 +33,10 @@
                         <!-- SIDEBAR USER TITLE -->
                         <div class="profile-usertitle">
                             <div class="profile-usertitle-name">
-                                Marcus Doe
+                                {{ $user['fullname'] }}
                             </div>
                             <div class="profile-usertitle-job">
-                                CREW CHIEF
+                                {{ $user['position'] }}
                             </div>
                         </div>
                         <!-- END SIDEBAR USER TITLE -->

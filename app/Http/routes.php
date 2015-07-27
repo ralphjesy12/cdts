@@ -36,3 +36,6 @@ Route::get('/assessment/exams/{id}/{q}', 'StaticsController@qa');
 
 // Storage File
 Route::get('/module/view', 'StaticsController@ViewModule');
+
+// Form routes
+Route::post('/form/saveExam', 'FormsController@saveExam');
