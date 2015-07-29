@@ -3,6 +3,7 @@ use Input;
 use Response;
 use Storage;
 
+use App\Question;
 use App\Exams;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -101,6 +102,14 @@ class StaticsController extends Controller {
 	{
 		$this->data['type'] = $type;
 		return view('home.exams',$this->data);
+	}
+	public function examsedit($id)
+	{
+		if(in_array($this->data['user']['level'],[0])){
+			$this->data['info'] = Exams::where('code', $id)->firstOrFail();
+			$this->data['questions'] = Question::where('exam',with($this->data['info'])->id)->get();
+			return view('home.admin.examsedit',$this->data);
+		}
 	}
 	public function qa($id,$q)
 	{

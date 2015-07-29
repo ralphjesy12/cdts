@@ -30,7 +30,6 @@
 						<th>Action</th>
 					</thead>
 					<tbody>
-						
 						@foreach($exams as $e)
 						<tr>
 							<td>#{{ $e['code'] }}</td>
@@ -40,7 +39,7 @@
 							<td>{{ $e['attempts'] }}</td>
 							<td>
 								<div class="btn-group">
-									<button class="btn btn-default btn-xs"><i class="fa fa-folder"></i></button>
+									<a href="/assessment/exams/{{ $e['code'] }}/edit" class="btn btn-default btn-xs"><i class="fa fa-folder"></i></a>
 									<button class="btn btn-default btn-xs"><i class="fa fa-pencil"></i></button>
 									<button class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i></button>
 								</div>

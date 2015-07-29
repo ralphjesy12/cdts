@@ -6,6 +6,7 @@ use Response;
 use Storage;
 
 use App\Exams;
+use App\Question;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -52,6 +53,16 @@ class FormsController extends Controller {
         $exam->save();
 		
 		return redirect()->intended('/assessment');
+	}
+	public function saveQuestion()
+	{
+		$question = new Question;
+		$input = Input::all();
+		$question->exam = $input['exam'];
+		$question->body = $input['examtitle'];
+		$question->choices = json_encode($input['choices']);
+        $question->save();
+		return redirect()->intended('/assessment/exams/' . $input['code'] . '/edit');
 	}
 
 }

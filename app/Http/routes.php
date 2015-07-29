@@ -32,6 +32,7 @@ Route::get('/training/browser/{type}', 'StaticsController@browser');
 Route::get('/assessment', 'StaticsController@assessment');
 Route::get('/assessment/interactive', 'StaticsController@interactive');
 Route::get('/assessment/exams/{type}', 'StaticsController@exams');
+Route::get('/assessment/exams/{id}/edit', 'StaticsController@examsedit');
 Route::get('/assessment/exams/{id}/{q}', 'StaticsController@qa');
 
 // Storage File
@@ -39,3 +40,4 @@ Route::get('/module/view', 'StaticsController@ViewModule');
 
 // Form routes
 Route::post('/form/saveExam', 'FormsController@saveExam');
+Route::post('/form/saveQuestion', 'FormsController@saveQuestion');
