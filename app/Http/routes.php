@@ -33,7 +33,9 @@ Route::get('/assessment', 'StaticsController@assessment');
 Route::get('/assessment/interactive', 'StaticsController@interactive');
 Route::get('/assessment/exams/{type}', 'StaticsController@exams');
 Route::get('/assessment/exams/{id}/edit', 'StaticsController@examsedit');
+Route::get('/assessment/exams/{id}/delete', 'StaticsController@examsdelete');
 Route::get('/assessment/exams/{id}/{q}', 'StaticsController@qa');
+Route::get('/assessment/question/{id}/{q}/delete', 'StaticsController@qadelete');
 
 // Storage File
 Route::get('/module/view', 'StaticsController@ViewModule');

@@ -72,7 +72,7 @@ class StaticsController extends Controller {
 	}
 	public function assessment()
 	{
-		if(in_array($this->data['user']['level'],[0])){
+		if(in_array($this->data['user']['level'],[4,3,2])){
 			$this->data['exams'] = Exams::where('status', 1)
                ->orderBy('id', 'asc')
                ->get();
@@ -101,14 +101,46 @@ class StaticsController extends Controller {
 	public function exams($type)
 	{
 		$this->data['type'] = $type;
+		$this->data['exams'] = Exams::where([
+			'type' => ucwords(strtolower($type)),
+		])->orderBy('created_at', 'desc')->get()->toArray();
 		return view('home.exams',$this->data);
 	}
 	public function examsedit($id)
 	{
-		if(in_array($this->data['user']['level'],[0])){
+		if(in_array($this->data['user']['level'],[4,3,2])){
 			$this->data['info'] = Exams::where('code', $id)->firstOrFail();
 			$this->data['questions'] = Question::where('exam',with($this->data['info'])->id)->get();
 			return view('home.admin.examsedit',$this->data);
+		}else{
+			return redirect()->intended('/assessment');
+		}
+	}
+	public function examsdelete($id)
+	{
+		if(in_array($this->data['user']['level'],[4,3,2])){
+			$questions = Exams::where('code', $id)->first()->questions();
+			if(count($questions))
+				$questions->delete();
+			if(count(Exams::where('code', $id)->delete())){
+				return redirect()->intended('/assessment');
+			}else{
+				abort(404);
+			}
+		}else{
+			return redirect()->intended('/assessment');
+		}
+	}
+	public function qadelete($exam,$id)
+	{
+		if(in_array($this->data['user']['level'],[4,3,2])){
+			if(count(Question::findOrFail($id)->delete())){
+				return redirect()->intended('/assessment/exams/'.$exam.'/edit');
+			}else{
+				abort(404);
+			}
+		}else{
+			return redirect()->intended('/assessment');
 		}
 	}
 	public function qa($id,$q)

@@ -56,13 +56,22 @@ class FormsController extends Controller {
 	}
 	public function saveQuestion()
 	{
-		$question = new Question;
+		
 		$input = Input::all();
+		if(!empty($input['questionid'])){
+			$question = Question::find($input['questionid']);
+		}else{
+			$question = new Question;
+		}
 		$question->exam = $input['exam'];
 		$question->body = $input['examtitle'];
 		$question->choices = json_encode($input['choices']);
-        $question->save();
-		return redirect()->intended('/assessment/exams/' . $input['code'] . '/edit');
+		if(!empty($input['questionid'])){
+        	$question->save();
+		}else{
+			$question->save();
+		}
+		return redirect()->intended('/assessment/exams/' . $input['examcode'] . '/edit');
 	}
 
 }

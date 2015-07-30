@@ -8,7 +8,7 @@
     <h3>{{ strtoupper($type) }}</h3>
 </div>
 <div class="row" style="margin-bottom:30px;">
-    @for($i = 0; $i < 5 ; $i++)
+    @foreach($exams as $e)
     <div class="col-xs-6">
         <div class="media">
             <div class="media-left">
@@ -17,18 +17,18 @@
                 </a>
             </div>
             <div class="media-body">
-                <h4 class="media-heading">Exam Title</h4>
+                <h4 class="media-heading">{{ $e['title'] }}</h4>
                 <ul class="list-unstyled">
-                    <li>Total <small>20 Questions</small></li>
-                    <li>Trials <small>3 Retries</small></li>
+                    <li>Total <small>{{ $e['items'] }} Questions</small></li>
+                    <li>Trials <small>3/{{ $e['attempts'] }} Attempts</small></li>
                     <li>Score <small>90%</small></li>
                 </ul>
             </div>
             <div class="media-right">
-                <a href="/assessment/exams/10293123/0" class="btn btn-danger">Take Exam</a>
+                <a href="/assessment/exams/{{ $e['code'] }}/0" class="btn btn-danger">Take Exam</a>
             </div>
         </div>
     </div>
-@endfor
+@endforeach
 </div>
 @endsection

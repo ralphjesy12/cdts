@@ -7,19 +7,26 @@
 <script src="{{ asset('js/admin.assessment.js') }}"></script>
 @endsection
 @section('content')
-<div class="row text-center" style="margin-bottom:30px;">
-	<h3>{{ strtoupper($info['title']) }}</h3>
-	<div class="col-xs-6">
-		<ul class="list-unstyled">
-			<li><b>Code</b> {{ $info['code'] }}</li>
-			<li><b>Type</b> {{ $info['type'] }}</li>
-		</ul>
+<ol class="breadcrumb">
+	<li><a href="/assessment">Assessment</a></li>
+	<li class="active">{{ strtoupper($info['title']) }}</li>
+</ol>
+<div class="row">
+	<div class="col-xs-4 col-xs-offset-1">
+		<dl class="dl-horizontal">
+			<dt>Exam Code</dt>
+			<dd>{{ $info['code'] }}</dd>
+			<dt>Exam Type</dt>
+			<dd>{{ $info['type'] }}</dd>
+		</dl>
 	</div>
-	<div class="col-xs-6">
-		<ul class="list-unstyled">
-			<li><b>Items</b> {{ $info['items'] }}</li>
-			<li><b>Attempts</b> {{ $info['attempts'] }}</li>
-		</ul>
+	<div class="col-xs-4 col-xs-offset-1">
+		<dl class="dl-horizontal">
+			<dt>Items per Exam</dt>
+			<dd>{{ $info['items'] }}</dd>
+			<dt>Max Attempts</dt>
+			<dd>{{ $info['attempts'] }}</dd>
+		</dl>
 	</div>
 </div>
 
@@ -38,7 +45,12 @@
 				<td>{{ $q['id'] }}</td>
 				<td>{{ $q['body'] }}</td>
 				<td>{{ COUNT(JSON_DECODE($q['choices'])) }}</td>
-				<td><button class="btn btn-default btn-xs btn-edit" data-info="{{ JSON_ENCODE($q) }}"><i class="fa fa-pencil"></i></button></td>
+				<td>
+					<div class="btn-group">
+						<button class="btn btn-default btn-xs btn-edit" data-info="{{ JSON_ENCODE($q) }}"><i class="fa fa-pencil"></i></button>
+						<a href="/assessment/question/4WDLJRAWDY/{{ $q['id'] }}/delete" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i></a>
+					</div>
+				</td>
 			</tr>
 			@endforeach
 			@else
@@ -94,7 +106,7 @@
 							<div class="input-group">
 								<input type="text" class="form-control" name="choices[]" required>
 								<span class="input-group-btn">
-									<button class="btn btn-danger disabled" disabled><i class="fa fa-trash"></i></button>
+									<button class="btn btn-danger btn-choiceremove disabled" disabled><i class="fa fa-trash"></i></button>
 								</span>
 							</div>
 						</div>

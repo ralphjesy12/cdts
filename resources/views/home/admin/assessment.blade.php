@@ -7,10 +7,9 @@
 <script src="{{ asset('js/admin.assessment.js') }}"></script>
 @endsection
 @section('content')
-<div class="row text-center" style="margin-bottom:30px;">
-	<h1>ASSESSMENT</h1>
-</div>
-
+<ol class="breadcrumb">
+	<li class="active">Assessment</li>
+</ol>
 <div class="tabbable-panel">
 	<div class="tabbable-line">
 		<ul class="nav nav-tabs ">
@@ -41,7 +40,7 @@
 								<div class="btn-group">
 									<a href="/assessment/exams/{{ $e['code'] }}/edit" class="btn btn-default btn-xs"><i class="fa fa-folder"></i></a>
 									<button class="btn btn-default btn-xs"><i class="fa fa-pencil"></i></button>
-									<button class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i></button>
+									<a href="/assessment/exams/{{ $e['code'] }}/delete" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i></a>
 								</div>
 							</td>
 						</tr>
