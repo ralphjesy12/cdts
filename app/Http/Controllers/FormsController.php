@@ -7,6 +7,7 @@ use Storage;
 
 use App\Exams;
 use App\Question;
+use App\Answers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -43,20 +44,20 @@ class FormsController extends Controller {
 		$exam = new Exams;
 
 		$input = Input::all();
-        $exam->code = $input['examcode'];
-        $exam->title = strlen($input['examtitle']) > 0 ? $input['examtitle'] : "Exam ".$input['examcode'];
-        $exam->items = $input['examitems'] > 0 ? $input['examitems'] : 1;
-        $exam->attempts = $input['examattempts'] > 0 ? $input['examattempts'] : 1;
-        $exam->type = $input['examtype'];
-        $exam->status = 1;
+		$exam->code = $input['examcode'];
+		$exam->title = strlen($input['examtitle']) > 0 ? $input['examtitle'] : "Exam ".$input['examcode'];
+		$exam->items = $input['examitems'] > 0 ? $input['examitems'] : 1;
+		$exam->attempts = $input['examattempts'] > 0 ? $input['examattempts'] : 1;
+		$exam->type = $input['examtype'];
+		$exam->status = 1;
 
-        $exam->save();
-		
+		$exam->save();
+
 		return redirect()->intended('/assessment');
 	}
 	public function saveQuestion()
 	{
-		
+
 		$input = Input::all();
 		if(!empty($input['questionid'])){
 			$question = Question::find($input['questionid']);
@@ -67,11 +68,24 @@ class FormsController extends Controller {
 		$question->body = $input['examtitle'];
 		$question->choices = json_encode($input['choices']);
 		if(!empty($input['questionid'])){
-        	$question->save();
+			$question->save();
 		}else{
 			$question->save();
 		}
 		return redirect()->intended('/assessment/exams/' . $input['examcode'] . '/edit');
+	}
+	public function saveAnswer()
+	{
+
+		$input = Input::all();
+		$answer = new Answers;
+		$answer->exam_id = $input['exam'];
+		$answer->question_id = $input['question'];
+		$answer->user_id = $input['user'];
+		$answer->answer = $input['answer'];
+		$answer->assessment_id = $input['assessment'];
+		$answer->save();
+		return redirect()->intended('/assessment/exams/' . $input['examcode'] . '/'. ++$input['item']);
 	}
 
 }

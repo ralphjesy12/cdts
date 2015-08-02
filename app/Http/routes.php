@@ -43,3 +43,4 @@ Route::get('/module/view', 'StaticsController@ViewModule');
 // Form routes
 Route::post('/form/saveExam', 'FormsController@saveExam');
 Route::post('/form/saveQuestion', 'FormsController@saveQuestion');
+Route::post('/form/saveAnswer', 'FormsController@saveAnswer');

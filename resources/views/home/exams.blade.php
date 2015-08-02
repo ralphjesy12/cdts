@@ -4,11 +4,17 @@
 <link href="{{ asset('css/dash.min.css') }}" rel="stylesheet">
 @endsection
 @section('content')
+<ol class="breadcrumb">
+	<li><a href="/assessment">Assessment</a></li>
+	<li class="active">{{ ucfirst(strtolower($type)) }}</li>
+</ol>
 <div class="row text-center" style="margin-bottom:30px;">
     <h3>{{ strtoupper($type) }}</h3>
 </div>
+
 <div class="row" style="margin-bottom:30px;">
-    @foreach($exams as $e)
+    @if(count($exams)>0)
+	@foreach($exams as $e)
     <div class="col-xs-6">
         <div class="media">
             <div class="media-left">
@@ -19,16 +25,24 @@
             <div class="media-body">
                 <h4 class="media-heading">{{ $e['title'] }}</h4>
                 <ul class="list-unstyled">
-                    <li>Total <small>{{ $e['items'] }} Questions</small></li>
-                    <li>Trials <small>3/{{ $e['attempts'] }} Attempts</small></li>
-                    <li>Score <small>90%</small></li>
+                    <li>Total : <small>{{ $e['questions'] }} Questions</small></li>
+                    <li>Trials : <small>{{ $e['trials'] }}/{{ $e['attempts'] }} Attempts</small></li>
+                    <li>Score : <small>{{ $e['score'] ? number_format($e['score']*100,2).'%' : 'Not Taken Yet'}}</small></li>
                 </ul>
             </div>
             <div class="media-right">
-                <a href="/assessment/exams/{{ $e['code'] }}/0" class="btn btn-danger">Take Exam</a>
+                <a href="/assessment/exams/{{ $e['code'] }}/0" class="btn btn-danger <?=( $e['trials']>=$e['attempts'] ? 'disabled' : '' )?>" <?=( $e['trials']>=$e['attempts'] ? 'disabled' : '' )?>>Take Exam</a>
             </div>
         </div>
     </div>
 @endforeach
+@else
+	 <div class="col-xs-12">
+        <div class="alert alert-danger" role="alert">
+			There are no exams found in this category.<br>
+			<a href="/assessment" class="alert-link">Click here to go back</a>.
+		 </div>
+    </div>
+@endif
 </div>
 @endsection
