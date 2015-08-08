@@ -193,3 +193,51 @@
 		background-color: #FEAF20;
 	}
 }
+
+
+#makeInteractive{
+	.modal-body{
+		#step-list{
+			> li{
+				.media-left{
+					div{
+						display: block;
+						position: relative;
+						width: 65px;
+						height: 65px;
+						background-position: center;
+						background-size: cover;
+						border: 1px solid #ddd;
+						border-radius: 3px;
+						padding: 3px;
+						box-sizing: border-box;
+						background-clip: content-box;
+						input[type="file"]{
+							height: 65px;
+							width: 65px;
+							position: absolute;
+							top: 0;
+							left: 0;
+							opacity: 0;
+							overflow: hidden;
+						}
+					}
+				}
+				.media-body{
+					input[type="text"]{
+						border-bottom-left-radius: 0;
+						border-bottom-right-radius: 0;
+						border-bottom-color: transparent;
+					}
+					textarea{
+						position: relative;
+						top: -1px;
+						border-top-left-radius: 0;
+						border-top-right-radius: 0;
+						resize: none;
+					}
+				}
+			}
+		}
+	}
+}

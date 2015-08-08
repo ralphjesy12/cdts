@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 use Input;
 use Response;
+use Image;
 use Storage;
+
 
 use App\Exams;
 use App\Question;
 use App\Answers;
+use App\Interactive;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -86,6 +89,45 @@ class FormsController extends Controller {
 		$answer->assessment_id = $input['assessment'];
 		$answer->save();
 		return redirect()->intended('/assessment/exams/' . $input['examcode'] . '/'. ++$input['item']);
+	}
+	public function saveExamInteractive()
+	{
+		$exam = new Exams;
+		$input = Input::all();
+
+		$exam->code = strtoupper(str_random(10));
+		$exam->title = strlen($input['examtitle']) > 0 ? $input['examtitle'] : "Exam ".$exam->code;
+		$exam->items = count($input['title']);
+		$exam->attempts = 3;
+		$exam->type = "Interactive";
+		$exam->status = 1;
+		$exam->save();
+
+		$title = $input['title'];
+		$desc = $input['desc'];
+		$images = Input::file('images');
+		for($i=0;$i<count($title);$i++){
+			$interactive = new Interactive;
+
+			if(!empty($images[$i])){
+				$outputname = hash('crc32b',$exam->code) . '_' . hash('crc32b',$title[$i]);
+				$moveFolder = public_path().DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'steps'.DIRECTORY_SEPARATOR;
+				Image::make($images[$i])->resize(400, 250, function ($constraint) {
+					$constraint->aspectRatio();
+					$constraint->upsize();
+				})->resizeCanvas(400, 250, 'center', false, array(255, 255, 255, 0))->save($moveFolder.$outputname.'.jpg');
+
+				$interactive->image = $outputname.'.jpg';
+			}
+
+			$interactive->exam_id = $exam->id;
+			$interactive->step = $i + 1;
+			$interactive->title = $title[$i];
+			$interactive->desc = $desc[$i];
+			$interactive->save();
+		}
+
+		return redirect()->intended('/assessment');
 	}
 
 }

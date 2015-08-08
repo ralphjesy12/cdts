@@ -1,4 +1,5 @@
 <?php $page = 'assessment'; ?>
+
 @extends('app')
 @section('styles')
 <link href="{{ asset('css/dash.min.css') }}" rel="stylesheet">
@@ -11,27 +12,28 @@
 @section('content')	  
 <div id="interactive" class="dash-panel">
 				<div class="panel-body text-center">
+					
 					<h3>HERE ARE THE AVAILABLE STEPS</h3>
 					<ul id="ingredient-box" class="interactiveLists">
-						@for( $i = 0 ; $i < 5 ; $i++)
+						@foreach( $steps as $s)
 											 <li>
 						<div class="item">
 							<!-- Image -->
 							<a href="#">
-								<img src="{{ asset('img/interactive/chix/1.jpg') }}" alt="" class="img-responsive">
+								<img src="{{ asset( 'images/steps/' . $s['image'] ) }}" alt="{{ str_slug($s['title'],'-') }}" class="img-responsive">
 							</a>
 							<!-- Content -->
 							<div class="content">
 								<!-- Icon -->
 								<a href="#" class="icon bg-red"><i class="fa fa-plus"></i></a>
 								<!-- Heading -->
-								<label>FRY</label>
+								<label>{{ $s['title'] }}</label>
 								<!-- Para -->
-								<p>This is the description about the frying</p>
+								<p>{{ $s['desc'] }}</p>
 							</div>
 						</div>
 						</li>
-					@endfor
+					@endforeach
 					</ul>
 				<h3>DROP THEM HERE IN THEIR CORRECT ORDER</h3>
 				<ul id="recipe-box" class="interactiveLists">

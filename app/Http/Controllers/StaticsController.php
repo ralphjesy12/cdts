@@ -83,8 +83,13 @@ class StaticsController extends Controller {
 		else
 			return view('home.assessment',$this->data);
 	}
-	public function interactive()
+	public function interactive($id,Request $request)
 	{
+
+		$user = User::find($request->user()->id);
+		$exam = Exams::where(['code'=>$id])->firstOrFail();
+		$this->data['steps'] = $exam->interactives()->get()->toArray();
+		shuffle($this->data['steps']);
 		return view('home.interactive',$this->data);
 	}
 
@@ -107,15 +112,15 @@ class StaticsController extends Controller {
 		$this->data['exams'] = Exams::where([
 			'type' => ucwords(strtolower($type)),
 		])->orderBy('created_at', 'desc')->get()->toArray();
-		
+
 		foreach($this->data['exams'] as $k=>$v){
 			$this->data['exams'][$k]['questions'] = Exams::find($v['id'])->firstOrFail()->questions()->count();
 			$this->data['exams'][$k]['trials'] = User::find($user->id)->assessment()->where([
-					'exam_id' => $v['id']
-				])->count();
+				'exam_id' => $v['id']
+			])->count();
 			$lastAssessment = User::find($user->id)->assessment()->where([
-					'exam_id' => $v['id']
-				])->get()->last();
+				'exam_id' => $v['id']
+			])->get()->last();
 			$this->data['exams'][$k]['score'] = false;
 			if($lastAssessment){
 				$this->data['exams'][$k]['score'] = $lastAssessment->score;
@@ -176,14 +181,14 @@ class StaticsController extends Controller {
 			$this->data['status'] = "start";
 		}else{
 			$assesment = User::find($user->id)->assessment()->where([
-					'exam_id' => $exam->id
-				])->get()->last();
+				'exam_id' => $exam->id
+			])->get()->last();
 			$questions = $exam->questions()->whereNotExists(function ($query) use ($user,$assesment) {
 				$query->select('answers.question_id')
 					->from('answers')
 					->whereRaw('answers.question_id = questions.id AND answers.exam_id = questions.exam AND answers.user_id = "'.$user->id.'" AND answers.assessment_id = "'.$assesment->id.'"');
 			})->get();
-			
+
 			if(count($questions)){
 				$question = $questions->random(1)->toArray();
 				$this->data['status'] = "exam";
@@ -203,16 +208,16 @@ class StaticsController extends Controller {
 			}else{
 				$this->data['status'] = "result";
 				$correct = Answers::where([
-						'exam_id' => $exam->id,
-						'assessment_id' => $assesment->id,
-						'user_id' => $user->id,
-						'answer' => 0
-					])->count();
+					'exam_id' => $exam->id,
+					'assessment_id' => $assesment->id,
+					'user_id' => $user->id,
+					'answer' => 0
+				])->count();
 				$answered = Answers::where([
-						'exam_id' => $exam->id,
-						'assessment_id' => $assesment->id,
-						'user_id' => $user->id
-					])->count();
+					'exam_id' => $exam->id,
+					'assessment_id' => $assesment->id,
+					'user_id' => $user->id
+				])->count();
 				$this->data['score'] = [
 					'total' => $exam->items,
 					'answered' => $answered,
@@ -224,7 +229,7 @@ class StaticsController extends Controller {
 				$assessment->save();
 			}
 		}
-		
+
 		return view('home.questions',$this->data);
 	}
 

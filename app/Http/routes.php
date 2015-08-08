@@ -30,7 +30,7 @@ Route::get('/home', 'StaticsController@home');
 Route::get('/training', 'StaticsController@training');
 Route::get('/training/browser/{type}', 'StaticsController@browser');
 Route::get('/assessment', 'StaticsController@assessment');
-Route::get('/assessment/interactive', 'StaticsController@interactive');
+Route::get('/assessment/interactive/{id}', 'StaticsController@interactive');
 Route::get('/assessment/exams/{type}', 'StaticsController@exams');
 Route::get('/assessment/exams/{id}/edit', 'StaticsController@examsedit');
 Route::get('/assessment/exams/{id}/delete', 'StaticsController@examsdelete');
@@ -42,5 +42,6 @@ Route::get('/module/view', 'StaticsController@ViewModule');
 
 // Form routes
 Route::post('/form/saveExam', 'FormsController@saveExam');
+Route::post('/form/saveExamInteractive', 'FormsController@saveExamInteractive');
 Route::post('/form/saveQuestion', 'FormsController@saveQuestion');
 Route::post('/form/saveAnswer', 'FormsController@saveAnswer');

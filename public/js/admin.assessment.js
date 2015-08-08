@@ -64,4 +64,31 @@ $(function(){
 
 		$('#makeQuestions').modal('show');
 	});
+
+
+	$("#makeInteractive #step-list").delegate(".btn-remove-step","click", function () {
+		$(this).parents('li').remove();
+	});
+	$("#makeInteractive #step-list").delegate("input[type='file']","change", function () {
+		if (typeof (FileReader) != "undefined") {
+
+			var image_holder = $(this).parent();
+			image_holder.css("background-image","url('/images/loading.gif')");
+
+			var reader = new FileReader();
+			reader.onload = function (e) {
+				image_holder.css("background-image","url('"+e.target.result+"')");
+			}
+			image_holder.show();
+			reader.readAsDataURL($(this)[0].files[0]);
+		} else {
+			alert("This browser does not support FileReader.");
+		}
+	});
+	$("#btn-add-steps").click(function(event){
+		event.preventDefault();
+		var stepstring = '<li class="col-xs-6" style="margin-bottom:10px;"><div class="media"><div class="media-left"><div><input type="file" name="images[]" required></div></div><div class="media-body"><input type="text" name="title[]" placeholder="Step Title" class="form-control input-sm" required><textarea name="desc[]" rows="2" class="form-control input-sm" placeholder="Step Description" required></textarea><a href="#" class="btn-remove-step"><small>Remove this step</small></a></div></div></li>';
+		$(this).parents('li').before(stepstring);
+	});
+
 });

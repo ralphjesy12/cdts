@@ -31,7 +31,11 @@
                 </ul>
             </div>
             <div class="media-right">
+				@if($type=='interactive')
+                <a href="/assessment/interactive/{{ $e['code'] }}" class="btn btn-danger <?=( $e['trials']>=$e['attempts'] ? 'disabled' : '' )?>" <?=( $e['trials']>=$e['attempts'] ? 'disabled' : '' )?>>Take Exam</a>
+				@else
                 <a href="/assessment/exams/{{ $e['code'] }}/0" class="btn btn-danger <?=( $e['trials']>=$e['attempts'] ? 'disabled' : '' )?>" <?=( $e['trials']>=$e['attempts'] ? 'disabled' : '' )?>>Take Exam</a>
+				@endif
             </div>
         </div>
     </div>

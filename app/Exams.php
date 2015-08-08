@@ -28,4 +28,8 @@ class Exams extends Model
 	{
 		return $this->hasMany('App\Question' , 'exam');
 	}
+	function interactives()
+	{
+		return $this->hasMany('App\Interactive' , 'exam_id');
+	}
 }

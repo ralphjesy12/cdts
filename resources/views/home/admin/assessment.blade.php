@@ -13,20 +13,23 @@
 <div class="tabbable-panel">
 	<div class="tabbable-line">
 		<ul class="nav nav-tabs ">
+			<li>
+				<a href="#tab_qa" data-toggle="tab">QA Trainings</a>
+			</li>
 			<li class="active">
-				<a href="#tab_default_1" data-toggle="tab">QA Trainings</a>
+				<a href="#tab_interactive" data-toggle="tab">Interactive</a>
 			</li>
 		</ul>
 		<div class="tab-content">
-			<div class="tab-pane active" id="tab_default_1">
+			<div class="tab-pane" id="tab_qa">
 				<table class="table">
 					<thead>
-						<th>Exam Code</th>
+						<th width="150px">Exam Code</th>
 						<th>Title</th>
 						<th>Questions</th>
 						<th>Items per Exam</th>
 						<th>Maximum Attemps</th>
-						<th>Action</th>
+						<th width="100px">Action</th>
 					</thead>
 					<tbody>
 						@foreach($exams as $e)
@@ -51,6 +54,31 @@
 					</tbody>
 				</table>
 			</div>
+			<div class="tab-pane active" id="tab_interactive">
+				<table class="table">
+					<thead>
+						<th width="150px">Exam Code</th>
+						<th>Title</th>
+						<th width="100px">Action</th>
+					</thead>
+					<tbody>
+						<tr>
+							<td>#10321</td>
+							<td>Spaghetti Examination</td>
+							<td>
+								<div class="btn-group">
+									<a href="/assessment/exams/123/edit" class="btn btn-default btn-xs"><i class="fa fa-folder"></i></a>
+									<button class="btn btn-default btn-xs"><i class="fa fa-pencil"></i></button>
+									<a href="/assessment/exams/123/delete" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i></a>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="6" class="text-center"><a href="#makeInteractive" data-toggle="modal">Add New Exam</a></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
 		</div>
 	</div>
 </div>
@@ -66,7 +94,7 @@
 			</div>
 			<div class="modal-body">
 				<form id="formSaveExam" class="form-horizontal" action="/form/saveExam" method="POST">
-					 {!! csrf_field() !!}
+					{!! csrf_field() !!}
 					<div class="form-group">
 						<label for="examcode" class="col-sm-2 control-label">Code</label>
 						<div class="col-sm-10">
@@ -108,5 +136,54 @@
 			</div>
 		</div>
 	</div>
+</div>
+
+
+<div class="modal fade" id="makeInteractive" tabindex="-1" role="dialog" aria-labelledby="makeExamsLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="makeExamsLabel">Add New Interactive</h4>
+			</div>
+			<div class="modal-body">
+				<form id="formSaveInteractive" class="form-horizontal" action="/form/saveExamInteractive" method="POST" enctype="multipart/form-data">
+					{!! csrf_field() !!}
+					<div class="form-group">
+						<div class="col-sm-12">
+							<input type="text" class="form-control" id="iexamtitle" name="examtitle" placeholder="Exam Title" required>
+						</div>
+					</div>
+					<ul id="step-list" class="list-unstyled row">
+						@for($i=1 ; $i<=3 ; $i++ )
+										 <li class="col-xs-6" style="margin-bottom:10px;">
+						<div class="media">
+							<div class="media-left">
+								<div>
+									<input type="file" name="images[]" required>
+								</div>
+							</div>
+							<div class="media-body text-right">
+								<input type="text" name="title[]" placeholder="Step Title" class="form-control input-sm" required>
+								<textarea name="desc[]" rows="2" class="form-control input-sm" placeholder="Step Description" required></textarea>
+								<a href="#" class="btn-remove-step"><small>Remove this step</small></a>
+							</div>
+						</div>
+						</li>
+					@endfor
+					<li class="col-xs-6" style="margin-bottom:10px;">
+						<div class="alert alert-danger text-center">
+							<a href="#" id="btn-add-steps">Add More Steps</a>
+						</div>
+					</li>
+					</ul>
+				</form>
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			<input type="submit" class="btn btn-primary" value="Save Changes" form="formSaveInteractive">
+		</div>
+	</div>
+</div>
 </div>
 @endsection
