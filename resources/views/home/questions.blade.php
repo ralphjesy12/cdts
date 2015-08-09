@@ -37,9 +37,10 @@
 <script>
 	$(function(){
 		var start = 4;
-		setInterval(function(){
+		var loop = setInterval(function(){
 			$('#btn-start-div span').text(start--);
 			if(start<0){
+				clearInterval(loop);				
 				window.location.assign($('#btn-start').attr('href'));
 			}
 		},1000);
