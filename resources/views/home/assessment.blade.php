@@ -13,13 +13,13 @@
         <h3>VERIFICATION</h3>
         <hr>
         <label>Date Taken</label>
-        <small>Jan 31, 1994</small><br>
+        <small>---</small><br>
         <label>Status</label>
-        <small>Completed</small><br>
+        <small>---</small><br>
         <label>Score</label>
-        <small>100%</small><br>
+        <small>---</small><br>
         <label>Retries Left</label>
-        <small>0</small><br><br>
+        <small>---</small><br><br>
         <a href="/assessment/exams/verification" class="btn btn-sms btn-danger">TAKE EXAM</a>
     </div>
     <div class="col-xs-4 text-center">
@@ -27,13 +27,13 @@
         <h3>TRAINING</h3>
         <hr>
         <label>Date Taken</label>
-        <small>Jan 31, 1994</small><br>
+        <small>---</small><br>
         <label>Status</label>
-        <small>Completed</small><br>
+        <small>---</small><br>
         <label>Score</label>
-        <small>100%</small><br>
+        <small>---</small><br>
         <label>Retries Left</label>
-        <small>3</small><br><br>
+        <small>---</small><br><br>
         <a href="/assessment/exams/training" class="btn btn-sms btn-danger">TAKE EXAM</a>
     </div>
     <div class="col-xs-4 text-center">
@@ -41,13 +41,13 @@
         <h3>INTERACTIVE</h3>
         <hr>
         <label>Date Taken</label>
-        <small>Jan 31, 1994</small><br>
+        <small>---</small><br>
         <label>Status</label>
-        <small>Completed</small><br>
+        <small>---</small><br>
         <label>Score</label>
-        <small>100%</small><br>
+        <small>---</small><br>
         <label>Retries Left</label>
-        <small>3</small><br><br>
+        <small>---</small><br><br>
         <a href="/assessment/exams/interactive" class="btn btn-sms btn-danger">TAKE EXAM</a>
     </div>
 </div>

@@ -14,9 +14,9 @@
         <label style="min-height:40px;">Training Station Observation Checklist</label>
         <hr>
         <label>Total</label>
-        <small>31 Modules</small><br>
+        <small>0 Modules</small><br>
         <label>Viewed</label>
-        <small>10 Modules</small><br>
+        <small>0 Modules</small><br>
         <a href="/training/browser/tsoc" class="btn btn-sms btn-danger">VIEW ALL</a>
     </div>
     <div class="col-xs-4 text-center">
@@ -25,9 +25,9 @@
         <label style="min-height:40px;">Operational Procedure Sheet</label>
         <hr>
         <label>Total</label>
-        <small>31 Modules</small><br>
+        <small>0 Modules</small><br>
         <label>Viewed</label>
-        <small>10 Modules</small><br>
+        <small>0 Modules</small><br>
         <a href="/training/browser/ops" class="btn btn-sms btn-danger">VIEW ALL</a>
     </div>
     <div class="col-xs-4 text-center">
@@ -36,9 +36,9 @@
         <label style="min-height:40px;">Instructional Clips</label>
         <hr>
         <label>Total</label>
-        <small>31 Modules</small><br>
+        <small>0 Modules</small><br>
         <label>Viewed</label>
-        <small>10 Modules</small><br>
+        <small>0 Modules</small><br>
         <a href="#" class="btn btn-sms btn-danger">VIEW ALL</a>
     </div>
 </div>
