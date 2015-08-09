@@ -88,7 +88,13 @@ class StaticsController extends Controller {
 
 		$user = User::find($request->user()->id);
 		$exam = Exams::where(['code'=>$id])->firstOrFail();
+		$thisassess = $user->assessment()->create([
+			'exam_id' => $exam->id,
+			'status' => 0
+		]);
+
 		$this->data['steps'] = $exam->interactives()->get()->toArray();
+		$this->data['code'] = $id;
 		shuffle($this->data['steps']);
 		return view('home.interactive',$this->data);
 	}
@@ -165,6 +171,23 @@ class StaticsController extends Controller {
 			return redirect()->intended('/assessment');
 		}
 	}
+	
+	public function interactiveResult($id,Request $request)
+	{
+		$exam = Exams::where(['code' => $id])->firstOrFail();
+		$user = User::find($request->user()->id);
+		$assessment = User::find($user->id)->assessment()->where([
+			'exam_id' => $exam->id
+		])->get()->last();
+
+		$this->data['exam'] = $exam;
+		$this->data['assessment'] = $assessment;
+		$this->data['attempts'] = User::find($user->id)->assessment()->where([
+			'exam_id' => $exam->id
+		])->get()->count();
+
+		return view('home.interactiveresult',$this->data);
+	}
 	public function qa($id,$q,Request $request)
 	{
 		$user = User::find($request->user()->id);
@@ -225,7 +248,10 @@ class StaticsController extends Controller {
 				];
 				$assessment = $assesment;
 				$assessment->status = 1;
-				$assessment->score = $correct/$exam->items ;
+				if($exam->items>0)
+					$assessment->score = $correct/$exam->items ;
+				else
+					$assessment->score = 0;
 				$assessment->save();
 			}
 		}

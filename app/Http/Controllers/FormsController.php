@@ -7,6 +7,7 @@ use Image;
 use Storage;
 
 
+use App\User;
 use App\Exams;
 use App\Question;
 use App\Answers;
@@ -128,6 +129,31 @@ class FormsController extends Controller {
 		}
 
 		return redirect()->intended('/assessment');
+	}
+
+
+	public function saveAnswerInteractive(Request $request)
+	{
+		
+		$input = Input::all();
+		$exam = Exams::where(['code'=>$input['code']])->firstOrFail();
+		$user = User::find($request->user()->id);
+
+		$correct = 0;
+		foreach($input['steps'] as $k=>$v){
+			if(($k+1) != $v) break;
+			$correct++;
+		}
+		
+		$assessment = User::find($user->id)->assessment()->where([
+			'exam_id' => $exam->id
+		])->get()->last();
+
+		$assessment->status = 1;
+		$assessment->score = $correct/count($input['steps']) ;
+		$assessment->save();
+
+		return redirect()->intended('/assessment/interactive/'.$input['code'].'/result');
 	}
 
 }
