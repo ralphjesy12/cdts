@@ -47,3 +47,4 @@ Route::post('/form/saveExamInteractive', 'FormsController@saveExamInteractive');
 Route::post('/form/saveQuestion', 'FormsController@saveQuestion');
 Route::post('/form/saveAnswer', 'FormsController@saveAnswer');
 Route::post('/form/saveAnswerInteractive', 'FormsController@saveAnswerInteractive');
+Route::post('/ajax/AuthenticateSupervisor', 'FormsController@ajaxAuthenticateSupervisor');

@@ -29,7 +29,6 @@ $(function() {
 		},
 		cancel : ".ui-state-highlight"
 	}).disableSelection();
-
 	$( "#ingredient-box > li .icon" ).on('click',function(event){
 		if($( "#recipe-box" ).children().length == 1 ){
 			$(this).parents('li').prependTo("#recipe-box");

@@ -39,7 +39,7 @@
         <small>0 Modules</small><br>
         <label>Viewed</label>
         <small>0 Modules</small><br>
-        <a href="#" class="btn btn-sms btn-danger">VIEW ALL</a>
+        <a href="/training/browser/videos" class="btn btn-sms btn-danger">VIEW ALL</a>
     </div>
 </div>
 @endsection

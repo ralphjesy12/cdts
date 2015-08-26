@@ -50,14 +50,24 @@ class StaticsController extends Controller {
 	}
 	public function browser($type)
 	{
+
 		$path = Input::get('folder');
+
+
 		if(empty($path))
 			$path = '';
 		else
-			$path = DIRECTORY_SEPARATOR.$path;
+			$path = '/'.$path;
 
-		$d = Storage::directories('training'.DIRECTORY_SEPARATOR.$type.$path);
-		$f = Storage::files('training'.DIRECTORY_SEPARATOR.$type.$path);
+		if (Storage::exists('training'.'/'.$type.$path))
+		{
+			$path = 'training'.'/'.$type.$path;
+
+		}else{
+			$path = 'training'.DIRECTORY_SEPARATOR.$type.$path;
+		}
+		$d = Storage::directories($path);
+		$f = Storage::files($path);
 
 		foreach($d as $k=>$v){
 			$d[$k] = str_replace('/', '\\',  $v);
@@ -66,6 +76,7 @@ class StaticsController extends Controller {
 		foreach($f as $k=>$v){
 			$f[$k] = str_replace('/', '\\',  $v);
 		}
+
 		$this->data['dirs'] = $d;
 		$this->data['files'] = $f;
 		$this->data['type'] = $type;
@@ -171,7 +182,7 @@ class StaticsController extends Controller {
 			return redirect()->intended('/assessment');
 		}
 	}
-	
+
 	public function interactiveResult($id,Request $request)
 	{
 		$exam = Exams::where(['code' => $id])->firstOrFail();

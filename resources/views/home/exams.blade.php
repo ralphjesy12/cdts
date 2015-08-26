@@ -3,6 +3,34 @@
 @section('styles')
 <link href="{{ asset('css/dash.min.css') }}" rel="stylesheet">
 @endsection
+@section('scripts')
+<script>
+	$(function(){
+		$('.media-right .btn-exam').click(function(event){
+			event.preventDefault();
+			var thisbtn = this;
+			bootbox.prompt({
+				title : "Authentication Required",
+				message : "Please provide Supervisor Password",
+				inputType : "password",
+				callback : function(result){
+					$.post("/ajax/AuthenticateSupervisor",{ password : result },function(result){
+						if(typeof result == 'object' && result.status)
+							window.open($(thisbtn).attr('href'),'_blank');
+						else
+							bootbox.alert("Authentication Failed");
+					}).error(function(){
+						bootbox.alert("Something went wrong. Click Ok to Reload Page",function(){
+							window.location.reload();
+						});
+					});
+				}
+			});
+
+		});
+	});
+</script>
+@endsection
 @section('content')
 <ol class="breadcrumb">
 	<li><a href="/assessment">Assessment</a></li>
@@ -40,9 +68,9 @@
 			
             <div class="media-right">
 				@if($type=='interactive')
-                <a href="/assessment/interactive/{{ $e['code'] }}" class="btn btn-danger <?=( $e['score']== 1 ? 'disabled' : '' )?>" <?=( $e['score'] == 1 ? 'disabled' : '' )?>>Take Exam</a>
+                <a href="/assessment/interactive/{{ $e['code'] }}" class="btn btn-danger btn-exam <?=( $e['score']== 1 ? 'disabled' : '' )?>" <?=( $e['score'] == 1 ? 'disabled' : '' )?>>Take Exam</a>
 				@else
-                <a href="/assessment/exams/{{ $e['code'] }}/0" class="btn btn-danger <?=( $e['trials']>=$e['attempts'] ? 'disabled' : '' )?>" <?=( $e['trials']>=$e['attempts'] ? 'disabled' : '' )?>>Take Exam</a>
+                <a href="/assessment/exams/{{ $e['code'] }}/0" class="btn btn-danger btn-exam <?=( $e['trials']>=$e['attempts'] ? 'disabled' : '' )?>" <?=( $e['trials']>=$e['attempts'] ? 'disabled' : '' )?>>Take Exam</a>
 				@endif
             </div>
         </div>

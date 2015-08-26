@@ -7,6 +7,7 @@ use Image;
 use Storage;
 
 
+use Auth;
 use App\User;
 use App\Exams;
 use App\Question;
@@ -134,7 +135,7 @@ class FormsController extends Controller {
 
 	public function saveAnswerInteractive(Request $request)
 	{
-		
+
 		$input = Input::all();
 		$exam = Exams::where(['code'=>$input['code']])->firstOrFail();
 		$user = User::find($request->user()->id);
@@ -144,7 +145,7 @@ class FormsController extends Controller {
 			if(($k+1) != $v) break;
 			$correct++;
 		}
-		
+
 		$assessment = User::find($user->id)->assessment()->where([
 			'exam_id' => $exam->id
 		])->get()->last();
@@ -154,6 +155,16 @@ class FormsController extends Controller {
 		$assessment->save();
 
 		return redirect()->intended('/assessment/interactive/'.$input['code'].'/result');
+	}
+
+	public function ajaxAuthenticateSupervisor(){
+		return [
+			'status' => (
+				Auth::attempt(['password' => Input::get('password'), 'level' => 2]) ||
+				Auth::attempt(['password' => Input::get('password'), 'level' => 3]) ||
+				Auth::attempt(['password' => Input::get('password'), 'level' => 4])
+				)
+		];
 	}
 
 }
