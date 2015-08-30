@@ -161,9 +161,9 @@ class FormsController extends Controller {
 	public function ajaxAuthenticateSupervisor(){
 		return [
 			'status' => (
-				Auth::check(['password' => Input::get('password'), 'level' => 2],false,false) ||
-				Auth::check(['password' => Input::get('password'), 'level' => 3],false,false) ||
-				Auth::check(['password' => Input::get('password'), 'level' => 4],false,false)
+				Auth::attempt(['password' => Input::get('password'), 'level' => 2],false,false) ||
+				Auth::attempt(['password' => Input::get('password'), 'level' => 3],false,false) ||
+				Auth::attempt(['password' => Input::get('password'), 'level' => 4],false,false)
 			)
 		];
 	}
