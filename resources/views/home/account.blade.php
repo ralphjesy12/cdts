@@ -2,9 +2,28 @@
 @extends('app')
 @section('styles')
 <link href="{{ asset('css/dash.min.css') }}" rel="stylesheet">
+<link href="{{ asset('plugins/dropzone/dropzone.css') }}" rel="stylesheet">
+<style>
+	.dropzone .dz-preview.dz-image-preview{
+		margin: 0 auto;
+		margin-top: 18px;
+	}
+</style>
 @endsection
 @section('scripts')
+<script type="application/javascript" src="{{ asset('plugins/dropzone/dropzone.js') }}"></script>
 <script type="application/javascript" src="{{ asset('js/accounts.js') }}"></script>
+<script type="application/javascript">
+	$(function(){
+		Dropzone.options.updateProfilePicture = {
+			init: function() {
+				this.on("success", function(file) {
+					window.location.reload();
+				});
+			}
+		};
+	});
+</script>
 @endsection
 
 @section('content')
@@ -21,8 +40,11 @@
 		<div class="tab-content">
 			<div class="tab-pane active" id="tab_ma">
 				<div class="row">
-					<div class="col-md-3 col-lg-3 " align="center"> 
-						<img alt="User Pic" src="/img/profile/profile_user.jpg" class="img-circle img-responsive"> 
+					<div class="col-md-3 col-lg-3 profile-userpic " align="center"> 
+						<form action="/form/updateprofilepic" class="dropzone" id="updateProfilePicture">
+							{!! csrf_field() !!} 
+							<img alt="User Pic" src="/img/profile/{{ hash('crc32b',$userobj->id) }}.jpg" class="img-circle img-responsive"> 
+						</form>
 					</div>
 					<div class=" col-md-9 col-lg-9 "> 
 						@if (count($errors) > 0)
