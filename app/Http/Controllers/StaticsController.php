@@ -37,6 +37,7 @@ class StaticsController extends Controller {
 
 		if($user = $request->user()){
 			$this->data['user'] = $user->toArray();
+			$this->data['userobj'] = $user;
 		};
 	}
 
@@ -47,6 +48,19 @@ class StaticsController extends Controller {
 	public function training()
 	{
 		return view('home.training',$this->data);
+	}
+	public function account()
+	{
+		return view('home.account',$this->data);
+	}
+	public function accountmanage()
+	{
+		if(in_array($this->data['user']['level'],[4,3,2])){
+			$this->data['users'] = User::orderBy("updated_at",'desc')->paginate(20);
+			return view('home.accountmanage',$this->data);
+		}
+		else
+			return redirect()->intended('/account');
 	}
 	public function browser($type)
 	{
@@ -122,6 +136,7 @@ class StaticsController extends Controller {
 			return response()->download($filepath);
 		}
 	}
+	
 	public function exams($type,Request $request)
 	{
 		$user = User::find($request->user()->id);

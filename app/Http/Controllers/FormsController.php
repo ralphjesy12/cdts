@@ -15,6 +15,7 @@ use App\Answers;
 use App\Interactive;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Validator;
 
 class FormsController extends Controller {
 
@@ -160,11 +161,131 @@ class FormsController extends Controller {
 	public function ajaxAuthenticateSupervisor(){
 		return [
 			'status' => (
-				Auth::check(['password' => Input::get('password'), 'level' => 2]) ||
-				Auth::check(['password' => Input::get('password'), 'level' => 3]) ||
-				Auth::check(['password' => Input::get('password'), 'level' => 4])
-				)
+				Auth::check(['password' => Input::get('password'), 'level' => 2],false,false) ||
+				Auth::check(['password' => Input::get('password'), 'level' => 3],false,false) ||
+				Auth::check(['password' => Input::get('password'), 'level' => 4],false,false)
+			)
 		];
+	}
+
+	protected function removeuser(){
+		$data = Input::all();
+		if(!empty($data['id'])){
+			User::where('id',$data['id'])->delete();
+		}
+	}
+
+	protected function getuserdata(){
+		$data = Input::all();
+		if(!empty($data['id'])){
+			return User::where('id',$data['id'])->first();
+		}
+	}
+	protected function edituser(){
+		$data = Input::all();
+		if(!empty($data['id'])){
+			$user = User::where('id',$data['id'])->first();
+			$levels = [
+				'Crew' => 0,
+				'Crew Chief' => 1,
+				'Manager' => 2,
+				'Head' => 3,
+				'Admin' => 4
+			];
+
+			$rules = [
+				'username' => 'required|unique:users,username,'.$user->id.'|max:255|alpha_num',
+				'fullname' => 'required|max:255|string',
+				'gender' => 'required',
+				'email' => 'required|email|max:255|unique:users,email,'.$user->id,
+
+			];
+
+			if(!empty($data['password'])){
+				$rules['newpassword'] = 'required|confirmed|min:6';
+			}
+
+			$validator = Validator::make(Input::all(), $rules);
+
+			if ($validator->fails()) {
+				return back()->withErrors($validator)->withInput();
+			}else{
+
+				$user->fullname = $data['fullname'];
+				$user->username = $data['username'];
+				$user->email = $data['email'];
+				$user->gender = $data['gender'];
+				$user->position = $data['position'];
+				$user->level = $levels[$data['position']];
+				if(!empty($data['newpassword'])){
+					$user->password = bcrypt($data['newpassword']);
+				}
+				$user->save();
+				return back();
+			}
+		}
+	}
+	protected function editprofile(){
+		$data = Input::all();
+		
+		if(Auth::attempt(['password' => Input::get('password'), 'id' => Auth::id()],false,false)){
+			$user = User::where('id',Auth::id())->first();
+			$rules = [
+				'username' => 'required|unique:users,username,'.Auth::id().'|max:255|alpha_num',
+				'fullname' => 'required|max:255|string',
+				'gender' => 'required',
+				'email' => 'required|email|max:255|unique:users,email,'.Auth::id(),
+			];
+
+			if(!empty($data['newpassword'])){
+				$rules['newpassword'] = 'required|confirmed|min:6';
+			}
+
+			$validator = Validator::make(Input::all(), $rules);
+
+			if ($validator->fails()) {
+				return back()->withErrors($validator)->withInput();
+			}else{
+
+				$user->fullname = $data['fullname'];
+				$user->username = $data['username'];
+				$user->email = $data['email'];
+				$user->gender = $data['gender'];
+				
+				if(!empty($data['newpassword'])){
+					$user->password = bcrypt($data['newpassword']);
+				}
+				
+				$user->save();
+				
+				return back();
+			}
+		}else{
+		return back()->withErrors(['Password Incorrect']);
+		}
+	}
+
+	protected function createuser()
+	{
+		$data = Input::all();
+		$levels = [
+			'Crew' => 0,
+			'Crew Chief' => 1,
+			'Manager' => 2,
+			'Head' => 3,
+			'Admin' => 4
+		];
+
+		User::create([
+			'fullname' => $data['fullname'],
+			'username' => $data['username'],
+			'email' => $data['email'],
+			'gender' => $data['gender'],
+			'position' => $data['position'],
+			'level' => $levels[$data['position']],
+			'password' => bcrypt($data['password']),
+		]);
+		return back();
 	}
 
 }
