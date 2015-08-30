@@ -294,10 +294,10 @@ class FormsController extends Controller {
 		$image = Input::file('file');
 		$outputname = hash('crc32b',Auth::id());
 		$moveFolder = public_path().DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.'profile'.DIRECTORY_SEPARATOR;
-		Image::make($image)->resize(150, 150, function ($constraint) {
+		Image::make($image)->fit(150, 150, function ($constraint) {
 			$constraint->aspectRatio();
 			$constraint->upsize();
-		})->resizeCanvas(150, 150, 'center', false, array(255, 255, 255, 0))->save($moveFolder.$outputname.'.jpg');
+		})->save($moveFolder.$outputname.'.jpg');
 	}
 
 }
