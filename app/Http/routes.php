@@ -37,6 +37,8 @@ Route::get('/assessment/exams/{id}/edit', 'StaticsController@examsedit');
 Route::get('/assessment/exams/{id}/delete', 'StaticsController@examsdelete');
 Route::get('/assessment/exams/{id}/{q}', 'StaticsController@qa');
 Route::get('/assessment/question/{id}/{q}/delete', 'StaticsController@qadelete');
+Route::get('/account', 'StaticsController@account');
+Route::get('/account/manage', 'StaticsController@accountmanage');
 
 // Storage File
 Route::get('/module/view', 'StaticsController@ViewModule');
@@ -47,4 +49,9 @@ Route::post('/form/saveExamInteractive', 'FormsController@saveExamInteractive');
 Route::post('/form/saveQuestion', 'FormsController@saveQuestion');
 Route::post('/form/saveAnswer', 'FormsController@saveAnswer');
 Route::post('/form/saveAnswerInteractive', 'FormsController@saveAnswerInteractive');
+Route::post('/form/createuser', 'FormsController@createuser');
+Route::post('/form/removeuser', 'FormsController@removeuser');
+Route::post('/form/getuserdata', 'FormsController@getuserdata');
+Route::post('/form/edituser', 'FormsController@edituser');
+Route::post('/form/editprofile', 'FormsController@editprofile');
 Route::post('/ajax/AuthenticateSupervisor', 'FormsController@ajaxAuthenticateSupervisor');
