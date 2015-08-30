@@ -55,3 +55,4 @@ Route::post('/form/getuserdata', 'FormsController@getuserdata');
 Route::post('/form/edituser', 'FormsController@edituser');
 Route::post('/form/editprofile', 'FormsController@editprofile');
 Route::post('/ajax/AuthenticateSupervisor', 'FormsController@ajaxAuthenticateSupervisor');
+Route::post('/form/updateprofilepic', 'FormsController@updateprofilepic');

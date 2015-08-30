@@ -28,7 +28,7 @@
 					<div class="profile-sidebar">
 						<!-- SIDEBAR USERPIC -->
 						<div class="profile-userpic">
-							<img src="{{ asset('img/profile/profile_user.jpg') }}" class="img-responsive" alt="">
+							<img src="{{ asset('img/profile/' . hash('crc32b',$userobj->id) . '.jpg') }}" class="img-responsive" alt="">
 						</div>
 						<!-- END SIDEBAR USERPIC -->
 						<!-- SIDEBAR USER TITLE -->

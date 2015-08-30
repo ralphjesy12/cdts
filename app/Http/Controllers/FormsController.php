@@ -227,7 +227,7 @@ class FormsController extends Controller {
 	}
 	protected function editprofile(){
 		$data = Input::all();
-		
+
 		if(Auth::attempt(['password' => Input::get('password'), 'id' => Auth::id()],false,false)){
 			$user = User::where('id',Auth::id())->first();
 			$rules = [
@@ -251,17 +251,17 @@ class FormsController extends Controller {
 				$user->username = $data['username'];
 				$user->email = $data['email'];
 				$user->gender = $data['gender'];
-				
+
 				if(!empty($data['newpassword'])){
 					$user->password = bcrypt($data['newpassword']);
 				}
-				
+
 				$user->save();
-				
+
 				return back();
 			}
 		}else{
-		return back()->withErrors(['Password Incorrect']);
+			return back()->withErrors(['Password Incorrect']);
 		}
 	}
 
@@ -286,6 +286,18 @@ class FormsController extends Controller {
 			'password' => bcrypt($data['password']),
 		]);
 		return back();
+	}
+	protected function updateprofilepic()
+	{
+		$data = Input::all();
+
+		$image = Input::file('file');
+		$outputname = hash('crc32b',Auth::id());
+		$moveFolder = public_path().DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.'profile'.DIRECTORY_SEPARATOR;
+		Image::make($image)->resize(150, 150, function ($constraint) {
+			$constraint->aspectRatio();
+			$constraint->upsize();
+		})->resizeCanvas(150, 150, 'center', false, array(255, 255, 255, 0))->save($moveFolder.$outputname.'.jpg');
 	}
 
 }
