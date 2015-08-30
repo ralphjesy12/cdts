@@ -33,9 +33,11 @@
 			<li class="active">
 				<a href="#tab_ma" data-toggle="tab">Manage Account</a>
 			</li>
+			@if($user['level']>1)
 			<li>
 				<a href="/account/manage">Manage Users</a>
 			</li>
+			@endif
 		</ul>
 		<div class="tab-content">
 			<div class="tab-pane active" id="tab_ma">

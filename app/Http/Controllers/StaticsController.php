@@ -4,6 +4,7 @@ use Response;
 use Storage;
 
 use App\User;
+use App\Activity;
 use App\Answers;
 use App\Question;
 use App\Exams;
@@ -136,7 +137,7 @@ class StaticsController extends Controller {
 			return response()->download($filepath);
 		}
 	}
-	
+
 	public function exams($type,Request $request)
 	{
 		$user = User::find($request->user()->id);
@@ -223,6 +224,16 @@ class StaticsController extends Controller {
 			$exam->items = $availableQuestions;
 		$this->data['exam'] = $exam;
 		if($q==0){
+
+
+			$thisactivity = new Activity();
+			$thisactivity->createActivity(
+				$user,
+				'exam',
+				'took the Exam : ' . $exam->title,
+				0
+			);
+
 			$thisassess = $user->assessment()->create([
 				'exam_id' => $exam->id,
 				'status' => 0
@@ -283,6 +294,16 @@ class StaticsController extends Controller {
 		}
 
 		return view('home.questions',$this->data);
+	}
+
+	public function activity(){
+		if($this->data['user']['level']>1){
+			$this->data['activities'] = Activity::orderBy('created_at','desc')->paginate('10');
+		}else{
+			$this->data['activities'] = Activity::where('user',$this->data['user']['id'])
+														->where('level', 0)->orderBy('created_at','desc')->paginate('10');
+		}
+		return view('home.activity',$this->data);
 	}
 
 }
