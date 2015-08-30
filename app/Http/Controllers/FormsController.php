@@ -5,12 +5,14 @@ use Input;
 use Response;
 use Image;
 use Storage;
+use Session;
 
 
 use Auth;
 use App\User;
 use App\Exams;
 use App\Question;
+use App\Activity;
 use App\Answers;
 use App\Interactive;
 use Illuminate\Http\Request;
@@ -298,6 +300,21 @@ class FormsController extends Controller {
 			$constraint->aspectRatio();
 			$constraint->upsize();
 		})->save($moveFolder.$outputname.'.jpg');
+	}
+
+	protected function getLogout(){
+		if(Auth::check()){
+			$thisactivity = new Activity();
+			$thisactivity->createActivity(
+				Auth::user(),
+				'login',
+				'have logged out',
+				0
+			);
+		}
+		Auth::logout();
+		Session::flush();
+		return redirect()->intended('/login');
 	}
 
 }
