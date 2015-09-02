@@ -57,3 +57,5 @@ Route::post('/form/edituser', 'FormsController@edituser');
 Route::post('/form/editprofile', 'FormsController@editprofile');
 Route::post('/ajax/AuthenticateSupervisor', 'FormsController@ajaxAuthenticateSupervisor');
 Route::post('/form/updateprofilepic', 'FormsController@updateprofilepic');
+Route::post('/form/addEvent', 'FormsController@addEvent');
+Route::get('/form/getEvents', 'FormsController@getEvents');

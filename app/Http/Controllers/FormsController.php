@@ -10,6 +10,7 @@ use Session;
 
 use Auth;
 use App\User;
+use App\Events;
 use App\Exams;
 use App\Question;
 use App\Activity;
@@ -288,6 +289,41 @@ class FormsController extends Controller {
 			'password' => bcrypt($data['password']),
 		]);
 		return back();
+	}
+	protected function addEvent()
+	{
+		$data = Input::all();
+		Events::create([
+			'title' => $data['title'],
+			'class' => $data['class'],
+			'start' => date("Y-m-d H:i:s",strtotime($data['start'])) ,
+			'end' => date("Y-m-d H:i:s",strtotime($data['end'])),
+		]);
+
+
+
+		return back();
+	}
+	protected function getEvents()
+	{
+		$events = [];
+		$start = Input::get('from') / 1000;
+		$end   = Input::get('to') / 1000;
+		foreach(Events::
+			whereBetween('start', [date('Y-m-d', $start), date('Y-m-d', $end)])->
+			whereBetween('end', [date('Y-m-d', $start), date('Y-m-d', $end)])->
+			get() as $e) {
+			$events[] = array(
+				'id' => $e->id,
+				'title' => $e->title,
+				'url' => '#',
+				'class' => $e->class,
+				'start' => strtotime($e->start) . '000',
+				'end' => strtotime($e->end) .'000'
+			);
+		}
+
+		echo json_encode(array('success' => 1, 'result' => $events));
 	}
 	protected function updateprofilepic()
 	{
