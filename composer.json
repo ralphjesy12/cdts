@@ -11,7 +11,8 @@
 		"fortawesome/font-awesome": "^4.3",
 		"components/jquery": "^2.1",
 		"doctrine/dbal": "^2.5",
-		"intervention/image": "dev-master"
+		"intervention/image": "dev-master",
+		"zizaco/entrust": "^1.5"
 	},
 	"require-dev": {
 		"fzaninotto/faker": "~1.4",

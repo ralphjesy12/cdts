@@ -11,7 +11,7 @@
 		<!-- Main Form -->
 		<div class="login-form-1">
 			<form id="register-form" class="text-left" method="POST" action="/register">
-				{!! csrf_field() !!} 
+				{!! csrf_field() !!}
 				@if (count($errors) > 0)
 				<div class="login-form-main-message show error">
 					<strong>Whoops!</strong> There were some problems with your input.<br><br>
@@ -47,10 +47,10 @@
 						</div>
 
 						<div class="form-group login-group-checkbox">
-							<input type="radio" class="" name="gender" id="male">
+							<input type="radio" class="" name="gender" id="male" value="male">
 							<label for="male">male</label>
 
-							<input type="radio" class="" name="gender" id="female">
+							<input type="radio" class="" name="gender" id="female" value="female">
 							<label for="female">female</label>
 						</div>
 
