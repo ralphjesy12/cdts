@@ -18,7 +18,13 @@ class UsersTableSeeder extends Seeder
             'username' => 'admin',
             'position' => 'Admin',
             'level' => '4',
-            'gender' => 'M'
+            'gender' => 'male'
         ]);
+
+        factory(App\Exams::class, 10)->create()->each(function($u) {
+            for ($i=0; $i < 5; $i++) {
+                $u->questions()->save(factory(App\Question::class)->make());
+            }
+        });
     }
 }
