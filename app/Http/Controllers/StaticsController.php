@@ -124,6 +124,21 @@ class StaticsController extends Controller {
 		shuffle($this->data['steps']);
 		return view('home.interactive',$this->data);
 	}
+	public function interactivepractice($id,Request $request)
+	{
+
+		$user = User::find($request->user()->id);
+		$exam = Exams::where(['code'=>$id])->firstOrFail();
+		$thisassess = $user->assessment()->create([
+			'exam_id' => $exam->id,
+			'status' => 3
+		]);
+
+		$this->data['steps'] = $exam->interactives()->get()->toArray();
+		$this->data['code'] = $id;
+		shuffle($this->data['steps']);
+		return view('home.interactivepractice',$this->data);
+	}
 
 	public function ViewModule(){
 		$path = Input::get('file');
@@ -149,10 +164,12 @@ class StaticsController extends Controller {
 		foreach($this->data['exams'] as $k=>$v){
 			$this->data['exams'][$k]['questions'] = Exams::find($v['id'])->firstOrFail()->questions()->count();
 			$this->data['exams'][$k]['trials'] = User::find($user->id)->assessment()->where([
-				'exam_id' => $v['id']
+				'exam_id' => $v['id'],
+				'status' => 1
 			])->count();
 			$lastAssessment = User::find($user->id)->assessment()->where([
-				'exam_id' => $v['id']
+				'exam_id' => $v['id'],
+				'status' => 1
 			])->get()->last();
 			$this->data['exams'][$k]['score'] = false;
 			if($lastAssessment){
@@ -204,16 +221,37 @@ class StaticsController extends Controller {
 		$exam = Exams::where(['code' => $id])->firstOrFail();
 		$user = User::find($request->user()->id);
 		$assessment = User::find($user->id)->assessment()->where([
-			'exam_id' => $exam->id
+			'exam_id' => $exam->id,
+			'status' => 1
 		])->get()->last();
 
 		$this->data['exam'] = $exam;
 		$this->data['assessment'] = $assessment;
 		$this->data['attempts'] = User::find($user->id)->assessment()->where([
-			'exam_id' => $exam->id
+			'exam_id' => $exam->id,
+			'status' => 1
 		])->get()->count();
 
 		return view('home.interactiveresult',$this->data);
+	}
+
+	public function interactiveResultPractice($id,Request $request)
+	{
+		$exam = Exams::where(['code' => $id])->firstOrFail();
+		$user = User::find($request->user()->id);
+		$assessment = User::find($user->id)->assessment()->where([
+			'exam_id' => $exam->id,
+			'status' => 2
+		])->get()->last();
+
+		$this->data['exam'] = $exam;
+		$this->data['assessment'] = $assessment;
+		$this->data['attempts'] = User::find($user->id)->assessment()->where([
+			'exam_id' => $exam->id,
+			'status' => 2
+		])->get()->count();
+
+		return view('home.interactiveresultpractice',$this->data);
 	}
 	public function qa($id,$q,Request $request)
 	{
