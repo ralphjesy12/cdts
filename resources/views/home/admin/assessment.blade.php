@@ -104,7 +104,7 @@
 					<div class="form-group">
 						<label for="examcode" class="col-sm-2 control-label">Code</label>
 						<div class="col-sm-10">
-							<input type="email" class="form-control" id="examcode" name="examcode" value="{{ strtoupper(str_random(10)) }}" readonly>
+							<input type="text" class="form-control" id="examcode" name="examcode" value="{{ strtoupper(str_random(10)) }}" readonly>
 						</div>
 					</div>
 					<div class="form-group">
