@@ -9,7 +9,7 @@
 <script src="{{ asset('js/interactive.js') }}"></script>
 @endsection
 
-@section('content')	  
+@section('content')
 <div id="interactive" class="dash-panel">
 	<div class="panel-body text-center">
 		<div class="row text-center" style="margin-bottom:30px;">
@@ -32,11 +32,11 @@
 				<ul class="list-unstyled">
 					<li><b>Score</b> : {{ $assessment->score==1 ? ( 100 - (($attempts-1)*10) . '%' ) : 'Failed'}}</li>
 					<li><b>Time</b> : <?php
-$datetime1 = new DateTime($assessment->created_at);
-$datetime2 = new DateTime($assessment->updated_at);
-$interval = $datetime1->diff($datetime2);
-echo $interval->format('%H:%I:%S');
-						?></li>
+					$datetime1 = new DateTime($assessment->created_at);
+					$datetime2 = new DateTime($assessment->updated_at);
+					$interval = $datetime1->diff($datetime2);
+					echo $interval->format('%H:%I:%S');
+					?></li>
 				</ul>
 			</div>
 			<div class="col-xs-4 text-center">
@@ -44,11 +44,11 @@ echo $interval->format('%H:%I:%S');
 				<h3>Score</h3>
 				@if($assessment->score<1)
 				<a class="btn btn-warning btn-block" href="/assessment/interactive/{{ $exam->code }}">Retake Exam</a><br>
-			@endif
+				@endif
 				<a class="btn btn-danger btn-block" href="/assessment">Go Back to Assessments</a>
 			</div>
-		</div>
 	</div>
+</div>
 
 
 </div>

@@ -251,6 +251,8 @@ class StaticsController extends Controller {
 			'status' => 2
 		])->get()->count();
 
+		$this->data['correct'] = $exam->interactives()->get();
+
 		return view('home.interactiveresultpractice',$this->data);
 	}
 	public function qa($id,$q,Request $request)
