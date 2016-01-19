@@ -19,3 +19,25 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
         'remember_token' => str_random(10),
     ];
 });
+
+$factory->define(App\Exams::class, function (Faker\Generator $faker) {
+
+        $faker->addProvider(new Faker\Provider\en_US\Text($faker));
+
+    return [
+        'code' => strtoupper($faker->regexify('[A-Z]{10}')),
+        'title' => $faker->realText($maxNbChars = 50, $indexSize = 2),
+        'items' => 10,
+        'attempts' => 3,
+        'type' => "Verification",
+        'status' => 1
+    ];
+});
+$factory->define(App\Question::class, function (Faker\Generator $faker) {
+    $faker->addProvider(new Faker\Provider\en_US\Text($faker));
+
+    return [
+        'body' => $faker->realText($maxNbChars = 100, $indexSize = 2),
+        'choices' => json_encode($faker->realText($maxNbChars = 50, $indexSize = 2)),
+    ];
+});
