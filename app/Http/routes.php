@@ -19,7 +19,7 @@ Route::get('/', 'Auth\AuthController@getLogin');
 // Authentication routes...
 Route::get('/login', 'Auth\AuthController@getLogin');
 Route::post('/login', 'Auth\AuthController@authenticate');
-Route::get('/logout', 'Auth\AuthController@getLogout');
+Route::get('/logout', 'FormsController@getLogout');
 
 // Registration routes...
 Route::get('/register', 'Auth\AuthController@getRegister');
@@ -39,6 +39,7 @@ Route::get('/assessment/exams/{id}/{q}', 'StaticsController@qa');
 Route::get('/assessment/question/{id}/{q}/delete', 'StaticsController@qadelete');
 Route::get('/account', 'StaticsController@account');
 Route::get('/account/manage', 'StaticsController@accountmanage');
+Route::get('/activity', 'StaticsController@activity');
 
 // Storage File
 Route::get('/module/view', 'StaticsController@ViewModule');
@@ -56,3 +57,5 @@ Route::post('/form/edituser', 'FormsController@edituser');
 Route::post('/form/editprofile', 'FormsController@editprofile');
 Route::post('/ajax/AuthenticateSupervisor', 'FormsController@ajaxAuthenticateSupervisor');
 Route::post('/form/updateprofilepic', 'FormsController@updateprofilepic');
+Route::post('/form/addEvent', 'FormsController@addEvent');
+Route::get('/form/getEvents', 'FormsController@getEvents');

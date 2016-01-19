@@ -5,12 +5,15 @@ use Input;
 use Response;
 use Image;
 use Storage;
+use Session;
 
 
 use Auth;
 use App\User;
+use App\Events;
 use App\Exams;
 use App\Question;
+use App\Activity;
 use App\Answers;
 use App\Interactive;
 use Illuminate\Http\Request;
@@ -161,9 +164,9 @@ class FormsController extends Controller {
 	public function ajaxAuthenticateSupervisor(){
 		return [
 			'status' => (
-				Auth::check(['password' => Input::get('password'), 'level' => 2],false,false) ||
-				Auth::check(['password' => Input::get('password'), 'level' => 3],false,false) ||
-				Auth::check(['password' => Input::get('password'), 'level' => 4],false,false)
+				Auth::attempt(['password' => Input::get('password'), 'level' => 2],false,false) ||
+				Auth::attempt(['password' => Input::get('password'), 'level' => 3],false,false) ||
+				Auth::attempt(['password' => Input::get('password'), 'level' => 4],false,false)
 			)
 		];
 	}
@@ -287,6 +290,41 @@ class FormsController extends Controller {
 		]);
 		return back();
 	}
+	protected function addEvent()
+	{
+		$data = Input::all();
+		Events::create([
+			'title' => $data['title'],
+			'class' => $data['class'],
+			'start' => date("Y-m-d H:i:s",strtotime($data['start'])) ,
+			'end' => date("Y-m-d H:i:s",strtotime($data['end'])),
+		]);
+
+
+
+		return back();
+	}
+	protected function getEvents()
+	{
+		$events = [];
+		$start = Input::get('from') / 1000;
+		$end   = Input::get('to') / 1000;
+		foreach(Events::
+			whereBetween('start', [date('Y-m-d', $start), date('Y-m-d', $end)])->
+			whereBetween('end', [date('Y-m-d', $start), date('Y-m-d', $end)])->
+			get() as $e) {
+			$events[] = array(
+				'id' => $e->id,
+				'title' => $e->title,
+				'url' => '#',
+				'class' => $e->class,
+				'start' => strtotime($e->start) . '000',
+				'end' => strtotime($e->end) .'000'
+			);
+		}
+
+		echo json_encode(array('success' => 1, 'result' => $events));
+	}
 	protected function updateprofilepic()
 	{
 		$data = Input::all();
@@ -298,6 +336,21 @@ class FormsController extends Controller {
 			$constraint->aspectRatio();
 			$constraint->upsize();
 		})->save($moveFolder.$outputname.'.jpg');
+	}
+
+	protected function getLogout(){
+		if(Auth::check()){
+			$thisactivity = new Activity();
+			$thisactivity->createActivity(
+				Auth::user(),
+				'login',
+				'have logged out',
+				0
+			);
+		}
+		Auth::logout();
+		Session::flush();
+		return redirect()->intended('/login');
 	}
 
 }

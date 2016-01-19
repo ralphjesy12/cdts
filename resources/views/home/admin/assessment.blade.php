@@ -33,6 +33,7 @@
 					</thead>
 					<tbody>
 						@foreach($exams as $e)
+						@if($e['type']!="Interactive")
 						<tr>
 							<td>#{{ $e['code'] }}</td>
 							<td>{{ $e['title'] }}</td>
@@ -47,6 +48,7 @@
 								</div>
 							</td>
 						</tr>
+						@endif
 						@endforeach
 						<tr>
 							<td colspan="6" class="text-center"><a href="#makeExams" data-toggle="modal">Add New Exam</a></td>
@@ -62,17 +64,21 @@
 						<th width="100px">Action</th>
 					</thead>
 					<tbody>
+						@foreach($exams as $e)
+						@if($e['type']=="Interactive")
 						<tr>
-							<td>#10321</td>
-							<td>Spaghetti Examination</td>
+							<td>#{{ $e['code'] }}</td>
+							<td>{{ $e['title'] }}</td>
 							<td>
 								<div class="btn-group">
-									<a href="/assessment/exams/123/edit" class="btn btn-default btn-xs"><i class="fa fa-folder"></i></a>
+									<a href="/assessment/exams/{{ $e['code'] }}/edit" class="btn btn-default btn-xs"><i class="fa fa-folder"></i></a>
 									<button class="btn btn-default btn-xs"><i class="fa fa-pencil"></i></button>
-									<a href="/assessment/exams/123/delete" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i></a>
+									<a href="/assessment/exams/{{ $e['code'] }}/delete" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i></a>
 								</div>
 							</td>
 						</tr>
+						@endif
+						@endforeach
 						<tr>
 							<td colspan="6" class="text-center"><a href="#makeInteractive" data-toggle="modal">Add New Exam</a></td>
 						</tr>

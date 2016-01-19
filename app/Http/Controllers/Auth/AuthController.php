@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
+use App\Activity;
 use Input;
 use Validator;
 use Auth;
@@ -83,6 +84,14 @@ class AuthController extends Controller
         if (Auth::viaRemember() || Auth::attempt(['email' => $username, 'password' => $password],$remember) || 
 			Auth::attempt(['username' => $username, 'password' => $password],$remember)) {
             // Authentication passed...
+			$thisactivity = new Activity();
+			$thisactivity->createActivity(
+				Auth::user(),
+				'login',
+				'have logged in',
+				0
+			);
+			
             return redirect()->intended('/home');
 		}else{
 			return redirect()->intended('/login')->withErrors(['Username and/or Password you entered does not belong to any user']);
