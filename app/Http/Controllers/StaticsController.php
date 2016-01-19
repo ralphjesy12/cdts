@@ -109,6 +109,15 @@ class StaticsController extends Controller {
 		else
 			return view('home.assessment',$this->data);
 	}
+
+	public function reports()
+	{
+		if(in_array($this->data['user']['level'],[4,3,2])){
+			return view('home.reports',$this->data);
+		}
+		else
+			return back();
+	}
 	public function interactive($id,Request $request)
 	{
 
