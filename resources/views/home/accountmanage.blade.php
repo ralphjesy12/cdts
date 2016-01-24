@@ -19,7 +19,7 @@
 			</li>
 		</ul>
 		<div class="tab-content">
-			<div class="tab-pane active" id="tab_mu">
+			<div class="tab-pane active table-responsive" id="tab_mu">
 				@if (count($errors) > 0)
 				<div class="login-form-main-message show error">
 					<strong>Whoops!</strong> There were some problems with your input.<br><br>
@@ -74,7 +74,7 @@
 				</table>
 				@if($users->currentPage()==1 && !$users->hasMorePages())
 				<ul class="pagination">
-					<li class="disabled"><span>«</span></li> 
+					<li class="disabled"><span>«</span></li>
 					<li class="active"><span>1</span></li>
 					<li class="disabled"><span>»</span></li>
 				</ul>
@@ -100,7 +100,7 @@
 			<div class="modal-body">
 
 				<form id="register-form" class="text-left" method="POST" action="/form/createuser">
-					{!! csrf_field() !!} 
+					{!! csrf_field() !!}
 
 					<div class="main-login-form">
 						<div class="login-group">
@@ -164,7 +164,7 @@
 			</div>
 			<div class="modal-body">
 				<form id="register-form" class="text-left" method="POST" action="/form/edituser">
-					{!! csrf_field() !!} 
+					{!! csrf_field() !!}
 					<input type="hidden" name="id">
 					<div class="main-login-form">
 						<div class="login-group">
@@ -209,6 +209,14 @@
 								<input type="radio" class="" name="gender" id="female" value="female">
 								<label for="female">female</label>
 							</div>
+							<h4>Permissions</h4>
+							<div class="checkbox">
+								<label>
+									<input type="checkbox" class="form-cotrol"> Manage User Permissions
+								</label>
+							</div>
+							<br/>
+							<br/>
 						</div>
 						<button type="submit" class="login-button btn btn-danger btn-sm">Save</button>
 					</div>

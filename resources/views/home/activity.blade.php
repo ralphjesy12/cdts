@@ -9,7 +9,7 @@
 </ol>
 <table class="table table-hover table-striped">
 	<tbody>
-
+@if(count($activities) > 0)
 		@foreach($activities as $a)
 		<?php
 $icon = 'fa-clock-o';
@@ -25,13 +25,18 @@ switch($a->name){
 			<td class="text-right">{{ $a->created_at->toDayDateTimeString() }}</td>
 		</tr>
 		@endforeach
+		@else
+		<tr>
+			<td class="text-center" colspan="3">No Activities Yet</td>
+		</tr>
+		@endif
 	</tbody>
 
 </table>
 
 @if($activities->currentPage()==1 && !$activities->hasMorePages())
 <ul class="pagination">
-	<li class="disabled"><span>«</span></li> 
+	<li class="disabled"><span>«</span></li>
 	<li class="active"><span>1</span></li>
 	<li class="disabled"><span>»</span></li>
 </ul>

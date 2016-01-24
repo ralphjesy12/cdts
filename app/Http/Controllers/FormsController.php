@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Http\Controllers;
 use Input;
@@ -23,22 +23,22 @@ use Validator;
 class FormsController extends Controller {
 
 	/*
-    |--------------------------------------------------------------------------
-    | Home Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller renders your application's "dashboard" for users that
-    | are authenticated. Of course, you are free to change or remove the
-    | controller as you wish. It is just here to get your app started!
-    |
-    */
+	|--------------------------------------------------------------------------
+	| Home Controller
+	|--------------------------------------------------------------------------
+	|
+	| This controller renders your application's "dashboard" for users that
+	| are authenticated. Of course, you are free to change or remove the
+	| controller as you wish. It is just here to get your app started!
+	|
+	*/
 	public $data = [];
 
 	/**
-     * Show the homepage of Kcom Realty
-     *
-     * @return Response
-     */
+	* Show the homepage of Kcom Realty
+	*
+	* @return Response
+	*/
 	public function __construct(Request $request)
 	{
 		$this->middleware('auth');
@@ -152,42 +152,132 @@ class FormsController extends Controller {
 
 		$assessment = User::find($user->id)->assessment()->where([
 			'exam_id' => $exam->id
-		])->get()->last();
+			])->get()->last();
 
-		$assessment->status = 1;
-		$assessment->score = $correct/count($input['steps']) ;
-		$assessment->save();
+			$assessment->status = 1;
+			$assessment->score = $correct/count($input['steps']) ;
+			$assessment->save();
 
-		return redirect()->intended('/assessment/interactive/'.$input['code'].'/result');
-	}
+			return redirect()->intended('/assessment/interactive/'.$input['code'].'/result');
+		}
 
-	public function ajaxAuthenticateSupervisor(){
-		return [
-			'status' => (
+		public function ajaxAuthenticateSupervisor(){
+			return [
+				'status' => (
 				Auth::attempt(['password' => Input::get('password'), 'level' => 2],false,false) ||
 				Auth::attempt(['password' => Input::get('password'), 'level' => 3],false,false) ||
 				Auth::attempt(['password' => Input::get('password'), 'level' => 4],false,false)
-			)
-		];
-	}
-
-	protected function removeuser(){
-		$data = Input::all();
-		if(!empty($data['id'])){
-			User::where('id',$data['id'])->delete();
+				)
+			];
 		}
-	}
 
-	protected function getuserdata(){
-		$data = Input::all();
-		if(!empty($data['id'])){
-			return User::where('id',$data['id'])->first();
+		protected function removeuser(){
+			$data = Input::all();
+			if(!empty($data['id'])){
+				User::where('id',$data['id'])->delete();
+			}
 		}
-	}
-	protected function edituser(){
-		$data = Input::all();
-		if(!empty($data['id'])){
-			$user = User::where('id',$data['id'])->first();
+
+		protected function getuserdata(){
+			$data = Input::all();
+			if(!empty($data['id'])){
+				return User::where('id',$data['id'])->first();
+			}
+		}
+		protected function edituser(){
+			$data = Input::all();
+			if(!empty($data['id'])){
+				$user = User::where('id',$data['id'])->first();
+				$levels = [
+					'Crew' => 0,
+					'Crew Chief' => 1,
+					'Manager' => 2,
+					'Head' => 3,
+					'Admin' => 4
+				];
+
+				$rules = [
+					'username' => 'required|unique:users,username,'.$user->id.'|max:255|alpha_num',
+					'fullname' => 'required|max:255|string',
+					'gender' => 'required',
+					'email' => 'required|email|max:255|unique:users,email,'.$user->id,
+
+				];
+
+				if(!empty($data['password'])){
+					$rules['newpassword'] = 'required|confirmed|min:6';
+				}
+
+				$validator = Validator::make(Input::all(), $rules);
+
+				if ($validator->fails()) {
+					return back()->withErrors($validator)->withInput();
+				}else{
+
+					$user->fullname = $data['fullname'];
+					$user->username = $data['username'];
+					$user->email = $data['email'];
+					$user->gender = $data['gender'];
+					$user->position = $data['position'];
+					$user->level = $levels[$data['position']];
+					if(!empty($data['newpassword'])){
+						$user->password = bcrypt($data['newpassword']);
+					}
+
+
+
+
+
+
+
+					$user->save();
+					return back();
+				}
+			}
+		}
+		protected function editprofile(){
+			$data = Input::all();
+
+			if(Auth::attempt(['password' => Input::get('password'), 'id' => Auth::id()],false,false)){
+				$user = User::where('id',Auth::id())->first();
+				$rules = [
+					'username' => 'required|unique:users,username,'.Auth::id().'|max:255|alpha_num',
+					'fullname' => 'required|max:255|string',
+					'gender' => 'required',
+					'email' => 'required|email|max:255|unique:users,email,'.Auth::id(),
+				];
+
+				if(!empty($data['newpassword'])){
+					$rules['newpassword'] = 'required|confirmed|min:6';
+				}
+
+				$validator = Validator::make(Input::all(), $rules);
+
+				if ($validator->fails()) {
+					return back()->withErrors($validator)->withInput();
+				}else{
+
+					$user->fullname = $data['fullname'];
+					$user->username = $data['username'];
+					$user->email = $data['email'];
+					$user->gender = $data['gender'];
+
+					if(!empty($data['newpassword'])){
+						$user->password = bcrypt($data['newpassword']);
+					}
+
+					$user->save();
+
+					return back();
+				}
+			}else{
+				return back()->withErrors(['Password Incorrect']);
+			}
+		}
+
+		protected function createuser()
+		{
+			$data = Input::all();
 			$levels = [
 				'Crew' => 0,
 				'Crew Chief' => 1,
@@ -196,161 +286,78 @@ class FormsController extends Controller {
 				'Admin' => 4
 			];
 
-			$rules = [
-				'username' => 'required|unique:users,username,'.$user->id.'|max:255|alpha_num',
-				'fullname' => 'required|max:255|string',
-				'gender' => 'required',
-				'email' => 'required|email|max:255|unique:users,email,'.$user->id,
-
-			];
-
-			if(!empty($data['password'])){
-				$rules['newpassword'] = 'required|confirmed|min:6';
-			}
-
-			$validator = Validator::make(Input::all(), $rules);
-
-			if ($validator->fails()) {
-				return back()->withErrors($validator)->withInput();
-			}else{
-
-				$user->fullname = $data['fullname'];
-				$user->username = $data['username'];
-				$user->email = $data['email'];
-				$user->gender = $data['gender'];
-				$user->position = $data['position'];
-				$user->level = $levels[$data['position']];
-				if(!empty($data['newpassword'])){
-					$user->password = bcrypt($data['newpassword']);
-				}
-				$user->save();
-				return back();
-			}
+			User::create([
+				'fullname' => $data['fullname'],
+				'username' => $data['username'],
+				'email' => $data['email'],
+				'gender' => $data['gender'],
+				'position' => $data['position'],
+				'level' => $levels[$data['position']],
+				'password' => bcrypt($data['password']),
+			]);
+			return back();
 		}
-	}
-	protected function editprofile(){
-		$data = Input::all();
+		protected function addEvent()
+		{
+			$data = Input::all();
+			Events::create([
+				'title' => $data['title'],
+				'class' => $data['class'],
+				'start' => date("Y-m-d H:i:s",strtotime($data['start'])) ,
+				'end' => date("Y-m-d H:i:s",strtotime($data['end'])),
+			]);
 
-		if(Auth::attempt(['password' => Input::get('password'), 'id' => Auth::id()],false,false)){
-			$user = User::where('id',Auth::id())->first();
-			$rules = [
-				'username' => 'required|unique:users,username,'.Auth::id().'|max:255|alpha_num',
-				'fullname' => 'required|max:255|string',
-				'gender' => 'required',
-				'email' => 'required|email|max:255|unique:users,email,'.Auth::id(),
-			];
 
-			if(!empty($data['newpassword'])){
-				$rules['newpassword'] = 'required|confirmed|min:6';
-			}
 
-			$validator = Validator::make(Input::all(), $rules);
-
-			if ($validator->fails()) {
-				return back()->withErrors($validator)->withInput();
-			}else{
-
-				$user->fullname = $data['fullname'];
-				$user->username = $data['username'];
-				$user->email = $data['email'];
-				$user->gender = $data['gender'];
-
-				if(!empty($data['newpassword'])){
-					$user->password = bcrypt($data['newpassword']);
+			return back();
+		}
+		protected function getEvents()
+		{
+			$events = [];
+			$start = Input::get('from') / 1000;
+			$end   = Input::get('to') / 1000;
+			foreach(Events::
+				whereBetween('start', [date('Y-m-d', $start), date('Y-m-d', $end)])->
+				whereBetween('end', [date('Y-m-d', $start), date('Y-m-d', $end)])->
+				get() as $e) {
+					$events[] = array(
+						'id' => $e->id,
+						'title' => $e->title,
+						'url' => '#',
+						'class' => $e->class,
+						'start' => strtotime($e->start) . '000',
+						'end' => strtotime($e->end) .'000'
+					);
 				}
 
-				$user->save();
-
-				return back();
+				echo json_encode(array('success' => 1, 'result' => $events));
 			}
-		}else{
-			return back()->withErrors(['Password Incorrect']);
-		}
-	}
+			protected function updateprofilepic()
+			{
+				$data = Input::all();
 
-	protected function createuser()
-	{
-		$data = Input::all();
-		$levels = [
-			'Crew' => 0,
-			'Crew Chief' => 1,
-			'Manager' => 2,
-			'Head' => 3,
-			'Admin' => 4
-		];
+				$image = Input::file('file');
+				$outputname = hash('crc32b',Auth::id());
+				$moveFolder = public_path().DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.'profile'.DIRECTORY_SEPARATOR;
+				Image::make($image)->fit(150, 150, function ($constraint) {
+					$constraint->aspectRatio();
+					$constraint->upsize();
+				})->save($moveFolder.$outputname.'.jpg');
+			}
 
-		User::create([
-			'fullname' => $data['fullname'],
-			'username' => $data['username'],
-			'email' => $data['email'],
-			'gender' => $data['gender'],
-			'position' => $data['position'],
-			'level' => $levels[$data['position']],
-			'password' => bcrypt($data['password']),
-		]);
-		return back();
-	}
-	protected function addEvent()
-	{
-		$data = Input::all();
-		Events::create([
-			'title' => $data['title'],
-			'class' => $data['class'],
-			'start' => date("Y-m-d H:i:s",strtotime($data['start'])) ,
-			'end' => date("Y-m-d H:i:s",strtotime($data['end'])),
-		]);
-
-
-
-		return back();
-	}
-	protected function getEvents()
-	{
-		$events = [];
-		$start = Input::get('from') / 1000;
-		$end   = Input::get('to') / 1000;
-		foreach(Events::
-			whereBetween('start', [date('Y-m-d', $start), date('Y-m-d', $end)])->
-			whereBetween('end', [date('Y-m-d', $start), date('Y-m-d', $end)])->
-			get() as $e) {
-			$events[] = array(
-				'id' => $e->id,
-				'title' => $e->title,
-				'url' => '#',
-				'class' => $e->class,
-				'start' => strtotime($e->start) . '000',
-				'end' => strtotime($e->end) .'000'
-			);
+			protected function getLogout(){
+				if(Auth::check()){
+					$thisactivity = new Activity();
+					$thisactivity->createActivity(
+					Auth::user(),
+					'login',
+					'have logged out',
+					0
+				);
+			}
+			Auth::logout();
+			Session::flush();
+			return redirect()->intended('/login');
 		}
 
-		echo json_encode(array('success' => 1, 'result' => $events));
 	}
-	protected function updateprofilepic()
-	{
-		$data = Input::all();
-
-		$image = Input::file('file');
-		$outputname = hash('crc32b',Auth::id());
-		$moveFolder = public_path().DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.'profile'.DIRECTORY_SEPARATOR;
-		Image::make($image)->fit(150, 150, function ($constraint) {
-			$constraint->aspectRatio();
-			$constraint->upsize();
-		})->save($moveFolder.$outputname.'.jpg');
-	}
-
-	protected function getLogout(){
-		if(Auth::check()){
-			$thisactivity = new Activity();
-			$thisactivity->createActivity(
-				Auth::user(),
-				'login',
-				'have logged out',
-				0
-			);
-		}
-		Auth::logout();
-		Session::flush();
-		return redirect()->intended('/login');
-	}
-
-}
