@@ -82,7 +82,7 @@
         <div class="col-xs-12">
             <hr>
             <div class="list-group">
-                <a href="#" class="list-group-item" target="_blank">
+                <a href="{{ action('StaticsController@reportsview',$input)}}" class="list-group-item" target="_blank">
                     <i class="fa fa-file fa-fw pull-left"></i>
                     <span class="list-heading">All Interactive Exams</span>
                 </a>
