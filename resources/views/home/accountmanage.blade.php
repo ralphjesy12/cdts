@@ -209,6 +209,14 @@
 								<input type="radio" class="" name="gender" id="female" value="female">
 								<label for="female">female</label>
 							</div>
+							<h4>Permissions</h4>
+							<div class="checkbox">
+								<label>
+									<input type="checkbox" class="form-cotrol"> Manage User Permissions
+								</label>
+							</div>
+							<br/>
+							<br/>
 						</div>
 						<button type="submit" class="login-button btn btn-danger btn-sm">Save</button>
 					</div>
