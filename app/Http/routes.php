@@ -44,6 +44,7 @@ Route::get('/account/manage', 'StaticsController@accountmanage');
 Route::get('/activity', 'StaticsController@activity');
 
 Route::get('/reports', 'StaticsController@reports');
+Route::get('/reports/view', 'StaticsController@reportsview');
 
 // Storage File
 Route::get('/module/view', 'StaticsController@ViewModule');
