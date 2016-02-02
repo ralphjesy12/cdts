@@ -58,16 +58,11 @@
 							<ul class="nav">
 								<li class="{{ isset($page) && $page=='home' ? 'active' : '' }}"><a href="/home"><i class="fa fa-fw fa-home"></i>Dashboard</a></li>
 
-
-
-
-
-
 								<li class="{{ isset($page) && $page=='training' ? 'active' : '' }}"><a href="/training"><i class="fa fa-fw fa-flag"></i>Training</a></li>
 								<li class="{{ isset($page) && $page=='assessment' ? 'active' : '' }}"><a href="/assessment"><i class="fa fa-fw fa-bolt"></i>Assessment</a></li>
-								@if($user['level']>2)
+							
 								<li class="{{ isset($page) && $page=='reports' ? 'active' : '' }}"><a href="/reports"><i class="fa fa-fw fa-print"></i>Reports</a></li>
-								@endif	
+
 								<li class="{{ isset($page) && $page=='activity' ? 'active' : '' }}"><a href="/activity"><i class="fa fa-fw fa-rss"></i>Activity</a></li>
 
 								<li class="{{ isset($page) && $page=='account' ? 'active' : '' }}"><a href="/account"><i class="fa fa-fw fa-user"></i>Account</a></li>
