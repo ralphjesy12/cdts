@@ -55,14 +55,18 @@
             <form method="GET">
                 <div class="form-group col-xs-6">
                     <small class="help-block">Type keywords to search name. Leave blank to search all</small>
-                    <input class="form-control input-sm" type="text" placeholder="Search by Crew Name" name="key">
+                    @if(in_array(Auth::user()->level,[4,3,2]))
+                        <input class="form-control input-sm" type="text" placeholder="Search by Crew Name" name="key">
+                    @else
+                        <input class="form-control input-sm" readonly  type="text" placeholder="Search by Crew Name" value="{{ Auth::user()->fullname }}" name="key" >
+                    @endif
                 </div>
                 <div class="form-group col-xs-6">
                     <small class="help-block">Examination Type</small>
                     <select class="form-control input-sm" name="type">
-                        <option {{ $input['type'] && $input['type']=='Verification' ? 'selected' : '' }}>Verification</option>
-                            <option {{ $input['type'] && $input['type']=='Training' ? 'selected' : '' }}>Training</option>
-                        <option {{ $input['type'] && $input['type']=='Interactive' ? 'selected' : '' }}>Interactive</option>
+                        <option {{ !empty($input['type']) && $input['type']=='Verisfication' ? 'selected' : '' }}>Verification</option>
+                        <option {{ !empty($input['type']) && $input['type']=='Training' ? 'selected' : '' }}>Training</option>
+                        <option {{ !empty($input['type']) && $input['type']=='Interactive' ? 'selected' : '' }}>Interactive</option>
                     </select>
                 </div>
                 <div class="form-group col-xs-6">
@@ -79,14 +83,16 @@
             </form>
         </div>
         @if(count($users))
-        <div class="col-xs-12">
-            <hr>
-            <div class="list-group">
-                <a href="{{ action('StaticsController@reportsview',$input)}}" class="list-group-item" target="_blank">
-                    <i class="fa fa-file fa-fw pull-left"></i>
-                    <span class="list-heading">All Interactive Exams</span>
-                </a>
-                @foreach($users as $u)
+            <div class="col-xs-12">
+                <hr>
+                <div class="list-group">
+                    @if(in_array(Auth::user()->level,[4,3,2]))
+                        <a href="{{ action('StaticsController@reportsview',$input)}}" class="list-group-item" target="_blank">
+                            <i class="fa fa-file fa-fw pull-left"></i>
+                            <span class="list-heading">All Interactive Exams</span>
+                        </a>
+                    @endif
+                    @foreach($users as $u)
                         <a href="{{ action('StaticsController@reportsview',array_merge($input,[
                             'user' => $u->id
                             ])) }}" class="list-group-item" target="_blank">
@@ -94,9 +100,19 @@
                             <span class="list-heading">{{ $u->fullname }}</span>
                             <small>{{ $u->email }}</small>
                         </a>
-                @endforeach
+                    @endforeach
+                </div>
             </div>
-        </div>
-    @endif
+        @else
+            <div class="col-xs-12">
+                <hr>
+                <div class="list-group">
+                    <div class="list-group-item">
+                        <i class="fa fa-file fa-fw pull-left"></i>
+                        <span class="list-heading">No Reports Found</span>
+                    </div>
+                </div>
+            </div>
+        @endif
     </div>
 @endsection

@@ -12,6 +12,7 @@ use App\Assessment;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
+use PDF;
 
 
 
@@ -114,7 +115,6 @@ class StaticsController extends Controller {
 
 	public function reports()
 	{
-		if(in_array($this->data['user']['level'],[4,3,2])){
 			$this->data['input'] = Input::all();
 			$users = [];
 			if(!empty($this->data['input'])){
@@ -122,7 +122,7 @@ class StaticsController extends Controller {
 					return $query->where('status',1);
 				});
 				if(!empty($this->data['input']['key'])){
-					$users = $users->where('fullname','LIKE','"%'.trim($this->data['input']['key']).'%"');
+					$users = $users->where('fullname','LIKE','%'.trim($this->data['input']['key']).'%');
 				}
 				if(!empty($this->data['input']['type'])){
 					$users = $users->whereHas('assessment',function($query){
@@ -144,9 +144,6 @@ class StaticsController extends Controller {
 			}
 			$this->data['users'] = $users;
 			return view('home.reports',$this->data);
-		}
-		else
-		return back();
 	}
 	public function reportsview(){
 		$input = Input::all();
@@ -161,7 +158,7 @@ class StaticsController extends Controller {
 
 		if(!empty($input['key'])){
 			$assessment = $assessment->whereHas('user',function($qq) use($input){
-				return $qq->where('fullname','LIKE','"%'.trim($input['key']).'%"');
+				return $qq->where('fullname','LIKE','%'.trim($input['key']).'%');
 			});
 		}
 		if(!empty($input['type'])){
@@ -176,8 +173,16 @@ class StaticsController extends Controller {
 				Carbon::createFromFormat('Y-m-d',$input['to'])->addDays(1)->toDateTimeString()
 			]);
 		}
+
 		$this->data['assessment'] = $assessment->get();
 		$this->data['input'] = $input;
+
+
+		if(!empty($input['download']) && $input['download']=='pdf'){
+			unset($this->data['input']['download']);
+			$pdf = \App::make('dompdf.wrapper');
+			return $pdf->loadView('home.reportsprint',$this->data)->download(str_slug('exam '.$input['type']. ' report export ' . date('Y-m-d')) . '.pdf');
+		}
 		return view('home.reportsview',$this->data);
 	}
 

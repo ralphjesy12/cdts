@@ -3,7 +3,10 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
         <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
         <title>Mcdonald&#39;s Crew Development Training System</title>
 
@@ -21,15 +24,15 @@
         @yield('styles')
     </head>
     <body>
-        
+
         @yield('content')
-        
+
 
         <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
         <script src="{{ asset('app.min.js') }}"></script>
         <!-- Google Fonts embed code -->
         <!-- Include all compiled plugins (below), or include individual files as needed -->
-        
+
 
         @yield('scripts')
 
