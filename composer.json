@@ -13,7 +13,9 @@
 		"doctrine/dbal": "^2.5",
 		"intervention/image": "dev-master",
 		"zizaco/entrust": "^1.5",
-		"barryvdh/laravel-dompdf": "0.6.*"
+		"barryvdh/laravel-dompdf": "0.6.*",
+		"twilio/sdk": "^4.10",
+		"aloha/twilio": "^2.0"
 	},
 	"require-dev": {
 		"fzaninotto/faker": "~1.4",

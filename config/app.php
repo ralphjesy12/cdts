@@ -147,6 +147,7 @@ return [
 
 		'Zizaco\Entrust\EntrustServiceProvider',
 		Barryvdh\DomPDF\ServiceProvider::class,
+		'Aloha\Twilio\Support\Laravel\ServiceProvider',
 
 	],
 
@@ -199,6 +200,7 @@ return [
 
 		  'Entrust' => 'Zizaco\Entrust\EntrustFacade',
 		  'PDF' => Barryvdh\DomPDF\Facade::class,
+		  'Twilio' => 'Aloha\Twilio\Support\Laravel\Facade',
 
 	],
 
