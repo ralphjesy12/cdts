@@ -4,63 +4,9 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "404db2887ca53f9594311eb828d27698",
-    "content-hash": "85f8cb4466f55c9713e8e93d84f082c0",
+    "hash": "783f622db4d86226ff4f082a156b51df",
+    "content-hash": "f0e0cd959a72ae20f156e124a479c9ee",
     "packages": [
-        {
-            "name": "aloha/twilio",
-            "version": "2.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/aloha/laravel-twilio.git",
-                "reference": "769542e66389463db10910b8ed1cd4ab749de255"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/aloha/laravel-twilio/zipball/769542e66389463db10910b8ed1cd4ab749de255",
-                "reference": "769542e66389463db10910b8ed1cd4ab749de255",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.5.0",
-                "twilio/sdk": "~3.12||~4.0"
-            },
-            "require-dev": {
-                "fabpot/php-cs-fixer": "^1.9",
-                "illuminate/console": "~4||~5",
-                "illuminate/support": "~4||~5",
-                "phpunit/phpunit": "~4.5"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Aloha\\Twilio\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Hannes Van De Vreken",
-                    "email": "vandevreken.hannes@gmail.com"
-                },
-                {
-                    "name": "Travis J Ryan",
-                    "email": "travisjryan@gmail.com"
-                }
-            ],
-            "description": "Twilio API for Laravel 4",
-            "homepage": "https://github.com/aloha/laravel-twilio",
-            "keywords": [
-                "ivr",
-                "laravel4",
-                "sms",
-                "twilio"
-            ],
-            "time": "2015-07-17 16:39:36"
-        },
         {
             "name": "barryvdh/laravel-dompdf",
             "version": "v0.6.1",
@@ -1119,16 +1065,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v5.1.28",
+            "version": "v5.1.29",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "3f0fd27939dfdafb1e50058423cd24e640894ba2"
+                "reference": "7e7ba568ffbc8f3f00778f2e8f41fb92127944fd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/3f0fd27939dfdafb1e50058423cd24e640894ba2",
-                "reference": "3f0fd27939dfdafb1e50058423cd24e640894ba2",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/7e7ba568ffbc8f3f00778f2e8f41fb92127944fd",
+                "reference": "7e7ba568ffbc8f3f00778f2e8f41fb92127944fd",
                 "shasum": ""
             },
             "require": {
@@ -1243,7 +1189,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2015-12-31 17:41:30"
+            "time": "2016-02-02 14:56:40"
         },
         {
             "name": "league/flysystem",
@@ -1550,16 +1496,16 @@
         },
         {
             "name": "paragonie/random_compat",
-            "version": "1.1.6",
+            "version": "v1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/random_compat.git",
-                "reference": "e6f80ab77885151908d0ec743689ca700886e8b0"
+                "reference": "b0e69d10852716b2ccbdff69c75c477637220790"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/e6f80ab77885151908d0ec743689ca700886e8b0",
-                "reference": "e6f80ab77885151908d0ec743689ca700886e8b0",
+                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/b0e69d10852716b2ccbdff69c75c477637220790",
+                "reference": "b0e69d10852716b2ccbdff69c75c477637220790",
                 "shasum": ""
             },
             "require": {
@@ -1594,7 +1540,7 @@
                 "pseudorandom",
                 "random"
             ],
-            "time": "2016-01-29 16:19:52"
+            "time": "2016-02-06 03:52:05"
         },
         {
             "name": "phenx/php-font-lib",
@@ -1788,6 +1734,50 @@
                 "shell"
             ],
             "time": "2015-11-12 16:18:56"
+        },
+        {
+            "name": "ronaldborla/chikka",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ronaldborla/chikka.git",
+                "reference": "a343eddea0e0ba6f6a527f95a3f3ca4dbe44699e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ronaldborla/chikka/zipball/a343eddea0e0ba6f6a527f95a3f3ca4dbe44699e",
+                "reference": "a343eddea0e0ba6f6a527f95a3f3ca4dbe44699e",
+                "shasum": ""
+            },
+            "require": {
+                "nesbot/carbon": "~1.0"
+            },
+            "suggest": {
+                "guzzlehttp/guzzle": "Allows for implementation of the Guzzle HTTP client"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Borla\\Chikka\\": "src/Borla/Chikka"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ronald Borla",
+                    "email": "ronald.borla@yahoo.com"
+                }
+            ],
+            "description": "Send and receive SMS using Chikka API",
+            "keywords": [
+                "chikka",
+                "ronaldborla",
+                "sms"
+            ],
+            "time": "2015-06-07 11:30:45"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -2665,56 +2655,6 @@
             "time": "2016-01-07 11:12:32"
         },
         {
-            "name": "twilio/sdk",
-            "version": "4.10.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/twilio/twilio-php.git",
-                "reference": "292fef46097bcc935007a117ddce9acc40a1a8c1"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/twilio/twilio-php/zipball/292fef46097bcc935007a117ddce9acc40a1a8c1",
-                "reference": "292fef46097bcc935007a117ddce9acc40a1a8c1",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.2.1"
-            },
-            "require-dev": {
-                "mockery/mockery": ">=0.7.2",
-                "phpunit/phpunit": "4.5.*"
-            },
-            "type": "library",
-            "autoload": {
-                "files": [
-                    "Services/Twilio.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Kevin Burke",
-                    "email": "kevin@twilio.com"
-                },
-                {
-                    "name": "Kyle Conroy",
-                    "email": "kyle+pear@twilio.com"
-                }
-            ],
-            "description": "A PHP wrapper for Twilio's API",
-            "homepage": "http://github.com/twilio/twilio-php",
-            "keywords": [
-                "api",
-                "sms",
-                "twilio"
-            ],
-            "time": "2016-01-29 00:19:22"
-        },
-        {
             "name": "twitter/bootstrap",
             "version": "v3.3.6",
             "source": {
@@ -3560,16 +3500,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "4.8.21",
+            "version": "4.8.22",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "ea76b17bced0500a28098626b84eda12dbcf119c"
+                "reference": "dfb11aa5236376b4fc63853cf746af39fe780e72"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/ea76b17bced0500a28098626b84eda12dbcf119c",
-                "reference": "ea76b17bced0500a28098626b84eda12dbcf119c",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/dfb11aa5236376b4fc63853cf746af39fe780e72",
+                "reference": "dfb11aa5236376b4fc63853cf746af39fe780e72",
                 "shasum": ""
             },
             "require": {
@@ -3628,7 +3568,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2015-12-12 07:45:58"
+            "time": "2016-02-02 09:01:21"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -4059,16 +3999,16 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v3.0.1",
+            "version": "v3.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "3df409958a646dad2bc5046c3fb671ee24a1a691"
+                "reference": "3cf0709d7fe936e97bee9e954382e449003f1d9a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/3df409958a646dad2bc5046c3fb671ee24a1a691",
-                "reference": "3df409958a646dad2bc5046c3fb671ee24a1a691",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/3cf0709d7fe936e97bee9e954382e449003f1d9a",
+                "reference": "3cf0709d7fe936e97bee9e954382e449003f1d9a",
                 "shasum": ""
             },
             "require": {
@@ -4104,13 +4044,14 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2015-12-26 13:39:53"
+            "time": "2016-02-02 13:44:19"
         }
     ],
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "intervention/image": 20
+        "intervention/image": 20,
+        "ronaldborla/chikka": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

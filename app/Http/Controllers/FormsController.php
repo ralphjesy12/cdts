@@ -11,7 +11,6 @@ use Session;
 use Auth;
 use Queue;
 use Carbon\Carbon;
-use Twilio;
 use App\User;
 use App\Events;
 use App\Exams;
@@ -23,6 +22,8 @@ use Illuminate\Http\Request;
 use App\Jobs\SendReminderSMS;
 use App\Http\Controllers\Controller;
 use Validator;
+
+use Borla\Chikka\Chikka;
 
 class FormsController extends Controller {
 
@@ -249,6 +250,7 @@ class FormsController extends Controller {
 						$user->email = $data['email'];
 						$user->gender = $data['gender'];
 						$user->position = $data['position'];
+						$user->contact = $data['contact'];
 						$user->level = $levels[$data['position']];
 						if(!empty($data['newpassword'])){
 							$user->password = bcrypt($data['newpassword']);
@@ -290,6 +292,7 @@ class FormsController extends Controller {
 						$user->fullname = $data['fullname'];
 						$user->username = $data['username'];
 						$user->email = $data['email'];
+						$user->contact = $data['contact'];
 						$user->gender = $data['gender'];
 
 						if(!empty($data['newpassword'])){
@@ -321,6 +324,7 @@ class FormsController extends Controller {
 					'username' => $data['username'],
 					'email' => $data['email'],
 					'gender' => $data['gender'],
+					'contact' => $data['contact'],
 					'position' => $data['position'],
 					'level' => $levels[$data['position']],
 					'password' => bcrypt($data['password']),
@@ -330,16 +334,34 @@ class FormsController extends Controller {
 			protected function addEvent(Request $request)
 			{
 				$data = Input::all();
+
 				Events::create([
-					'title' => $data['title'],
+					'title' => $data['title'] . '@@' . implode(',',$data['participants']),
 					'class' => $data['class'],
 					'start' => date("Y-m-d H:i:s",strtotime($data['start'])) ,
 					'end' => date("Y-m-d H:i:s",strtotime($data['end'])),
 				]);
-				// $job = (new SendReminderSMS(Auth::user(),['message'=>$data['title'] . date('Y-m-d-H:i:s')]));
-				// \Queue::later(20,$job);
 
-				Twilio::message('+639332796258', $data['title']);
+				$mobile = Auth::user()->contact;
+				$participants = [];
+				if(strpos($data['title'],'@@'))
+				$participants = explode(',',substr($data['title'],strpos($data['title'],'@@')+2));
+				if(!empty($participants))
+				$participants = User::select('id','fullname','position','contact')->whereIn("id",$participants)->get();
+
+				foreach ($participants as $p) {
+					if(!empty($p->contact)){
+						\Chikka::send($p->contact, 'CDTS App | [' . strtoupper($data['class']) . '] '.
+						$data['title'] . ' . From : ' .
+						date("M j, Y, g:i a",strtotime($data['start'])) . ' - ' .
+						date("M j, Y, g:i a",strtotime($data['end'])).'
+
+						Created by ' .
+						Auth::user()->fullname . '
+
+						.');
+					}
+				}
 
 				return back();
 			}
@@ -352,10 +374,16 @@ class FormsController extends Controller {
 					whereBetween('start', [date('Y-m-d', $start), date('Y-m-d', $end)])->
 					whereBetween('end', [date('Y-m-d', $start), date('Y-m-d', $end)])->
 					get() as $e) {
+						$participants = [];
+						if(strpos($e->title,'@@'))
+						$participants = explode(',',substr($e->title,strpos($e->title,'@@')+2));
+						if(!empty($participants))
+						$participants = User::select('id','fullname','position')->whereIn("id",$participants)->get();
 						$events[] = array(
 							'id' => $e->id,
 							'title' => $e->title,
 							'url' => '#',
+							'participants' => $participants,
 							'class' => $e->class,
 							'start' => strtotime($e->start) . '000',
 							'end' => strtotime($e->end) .'000'
@@ -364,6 +392,7 @@ class FormsController extends Controller {
 
 					echo json_encode(array('success' => 1, 'result' => $events));
 				}
+
 				protected function updateprofilepic()
 				{
 					$data = Input::all();

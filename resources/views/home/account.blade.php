@@ -42,13 +42,13 @@
 		<div class="tab-content">
 			<div class="tab-pane active" id="tab_ma">
 				<div class="row">
-					<div class="col-md-3 col-lg-3 profile-userpic " align="center"> 
+					<div class="col-md-3 col-lg-3 profile-userpic " align="center">
 						<form action="/form/updateprofilepic" class="dropzone" id="updateProfilePicture">
-							{!! csrf_field() !!} 
-							<img alt="User Pic" src="/img/profile/{{ hash('crc32b',$userobj->id) }}.jpg" class="img-circle img-responsive"> 
+							{!! csrf_field() !!}
+							<img alt="User Pic" src="/img/profile/{{ hash('crc32b',$userobj->id) }}.jpg" class="img-circle img-responsive">
 						</form>
 					</div>
-					<div class=" col-md-9 col-lg-9 "> 
+					<div class=" col-md-9 col-lg-9 ">
 						@if (count($errors) > 0)
 						<div class="login-form-main-message show error">
 							<strong>Whoops!</strong> There were some problems with your input.<br><br>
@@ -72,6 +72,10 @@
 								<tr>
 									<td>Email</td>
 									<td>{{ $userobj->email }}</td>
+								</tr>
+								<tr>
+									<td>Contact</td>
+									<td>{{ !empty($userobj->contact) ? $userobj->contact : 'None. Set contact number to receive SMS notifications' }}</td>
 								</tr>
 								<tr>
 									<td>Position</td>
@@ -105,7 +109,7 @@
 			</div>
 			<div class="modal-body">
 				<form id="register-form" class="text-left" method="POST" action="/form/editprofile">
-					{!! csrf_field() !!} 
+					{!! csrf_field() !!}
 					<div class="main-login-form">
 						<div class="login-group">
 							<div class="form-group">
@@ -119,6 +123,11 @@
 							<div class="form-group">
 								<label for="reg_email" class="sr-only">Email</label>
 								<input type="email" class="form-control" id="reg_email" name="email" placeholder="email"  value="{{ $userobj->email }}">
+							</div>
+							<div class="form-group">
+								<label for="reg_email" class="sr-only">Contact</label>
+								<input type="text" class="form-control" id="reg_contact" name="contact" placeholder="Contact"  value="{{ $userobj->contact }}">
+								<small class="help-text">For SMS Notifications</small>
 							</div>
 
 							<div class="form-group login-group-checkbox">

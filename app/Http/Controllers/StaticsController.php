@@ -47,6 +47,7 @@ class StaticsController extends Controller {
 
 	public function home()
 	{
+		$this->data['managers'] = User::select('id','fullname','position')->whereIn("level",[4,3,2])->get();
 		return view('home.home',$this->data);
 	}
 	public function training()
