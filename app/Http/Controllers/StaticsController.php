@@ -47,6 +47,7 @@ class StaticsController extends Controller {
 
 	public function home()
 	{
+		$this->data['managers'] = User::select('id','fullname','position')->whereIn("level",[4,3,2])->get();
 		return view('home.home',$this->data);
 	}
 	public function training()
@@ -66,6 +67,35 @@ class StaticsController extends Controller {
 		else
 		return redirect()->intended('/account');
 	}
+	public function browserupload(Request $request,$type){
+
+
+		$path = Input::get('folder');
+
+		if(empty($path))
+		$path = '';
+		else
+		$path = '/'.$path;
+
+		if (Storage::exists('training'.'/'.$type.$path))
+		{
+			$path = 'training'.'/'.$type.$path;
+
+		}else{
+			$path = 'training'.DIRECTORY_SEPARATOR.$type.$path;
+		}
+
+		if ($request->hasFile('file') && Storage::exists($path)) {
+			$filename = $request->file('file')->getClientOriginalName();
+			$request->file('file')->move(storage_path('app/'.$path), $filename);
+		}else{
+			return back()->withErrors('Upload Failed');
+		}
+
+		return back();
+
+	}
+
 	public function browser($type)
 	{
 
@@ -115,35 +145,35 @@ class StaticsController extends Controller {
 
 	public function reports()
 	{
-			$this->data['input'] = Input::all();
-			$users = [];
-			if(!empty($this->data['input'])){
-				$users = User::whereHas('assessment',function($query){
-					return $query->where('status',1);
-				});
-				if(!empty($this->data['input']['key'])){
-					$users = $users->where('fullname','LIKE','%'.trim($this->data['input']['key']).'%');
-				}
-				if(!empty($this->data['input']['type'])){
-					$users = $users->whereHas('assessment',function($query){
-						return $query->whereHas('exam',function($qq){
-							return $qq->where('type',strtolower($this->data['input']['type']));
-						});
-					});
-				}
-
-				if(!empty($this->data['input']['from']) && !empty($this->data['input']['to'])){
-					$users = $users->whereHas('assessment' , function($query){
-						return $query->whereBetween('created_at',[
-							Carbon::createFromFormat('Y-m-d',$this->data['input']['from'])->subDays(1)->toDateTimeString(),
-							Carbon::createFromFormat('Y-m-d',$this->data['input']['to'])->addDays(1)->toDateTimeString()
-						]);
-					});
-				}
-				$users = $users->get();
+		$this->data['input'] = Input::all();
+		$users = [];
+		if(!empty($this->data['input'])){
+			$users = User::whereHas('assessment',function($query){
+				return $query->where('status',1);
+			});
+			if(!empty($this->data['input']['key'])){
+				$users = $users->where('fullname','LIKE','%'.trim($this->data['input']['key']).'%');
 			}
-			$this->data['users'] = $users;
-			return view('home.reports',$this->data);
+			if(!empty($this->data['input']['type'])){
+				$users = $users->whereHas('assessment',function($query){
+					return $query->whereHas('exam',function($qq){
+						return $qq->where('type',strtolower($this->data['input']['type']));
+					});
+				});
+			}
+
+			if(!empty($this->data['input']['from']) && !empty($this->data['input']['to'])){
+				$users = $users->whereHas('assessment' , function($query){
+					return $query->whereBetween('created_at',[
+						Carbon::createFromFormat('Y-m-d',$this->data['input']['from'])->subDays(1)->toDateTimeString(),
+						Carbon::createFromFormat('Y-m-d',$this->data['input']['to'])->addDays(1)->toDateTimeString()
+					]);
+				});
+			}
+			$users = $users->get();
+		}
+		$this->data['users'] = $users;
+		return view('home.reports',$this->data);
 	}
 	public function reportsview(){
 		$input = Input::all();
@@ -235,7 +265,7 @@ class StaticsController extends Controller {
 		$user = User::find($request->user()->id);
 		$this->data['type'] = $type;
 		$this->data['exams'] = Exams::where([
-			'type' => ucwords(strtolower($type)),
+			'type' => ucwords(strtolower($type))
 			])->orderBy('created_at', 'desc')->get()->toArray();
 
 			foreach($this->data['exams'] as $k=>$v){

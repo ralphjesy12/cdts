@@ -33,7 +33,7 @@ class AuthController extends Controller
      */
     protected $redirectPath = '/home';
     protected $loginPath = '/login';
-    
+
     public function __construct()
     {
         $this->middleware('guest', ['except' => 'getLogout']);
@@ -69,19 +69,20 @@ class AuthController extends Controller
             'fullname' => $data['fullname'],
             'username' => $data['username'],
             'email' => $data['email'],
+            'contact' => $data['contact'],
             'gender' => $data['gender'],
             'position' => "crew",
             'level' => "0",
             'password' => bcrypt($data['password']),
         ]);
     }
-	
+
 	public function authenticate()
     {
 		$username = Input::get('username');
 		$password = Input::get('password');
 		$remember = Input::get('remember');
-        if (Auth::viaRemember() || Auth::attempt(['email' => $username, 'password' => $password],$remember) || 
+        if (Auth::viaRemember() || Auth::attempt(['email' => $username, 'password' => $password],$remember) ||
 			Auth::attempt(['username' => $username, 'password' => $password],$remember)) {
             // Authentication passed...
 			$thisactivity = new Activity();
@@ -91,7 +92,7 @@ class AuthController extends Controller
 				'have logged in',
 				0
 			);
-			
+
             return redirect()->intended('/home');
 		}else{
 			return redirect()->intended('/login')->withErrors(['Username and/or Password you entered does not belong to any user']);

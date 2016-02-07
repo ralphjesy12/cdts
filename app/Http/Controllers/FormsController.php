@@ -9,6 +9,8 @@ use Session;
 
 
 use Auth;
+use Queue;
+use Carbon\Carbon;
 use App\User;
 use App\Events;
 use App\Exams;
@@ -17,8 +19,11 @@ use App\Activity;
 use App\Answers;
 use App\Interactive;
 use Illuminate\Http\Request;
+use App\Jobs\SendReminderSMS;
 use App\Http\Controllers\Controller;
 use Validator;
+
+use Borla\Chikka\Chikka;
 
 class FormsController extends Controller {
 
@@ -137,7 +142,31 @@ class FormsController extends Controller {
 	}
 
 
-		public function saveAnswerInteractive(Request $request)
+	public function saveAnswerInteractive(Request $request)
+	{
+
+		$input = Input::all();
+		$exam = Exams::where(['code'=>$input['code']])->firstOrFail();
+		$user = User::find($request->user()->id);
+
+		$correct = 0;
+		foreach($input['steps'] as $k=>$v){
+			if(($k+1) != $v) break;
+			$correct++;
+		}
+
+		$assessment = User::find($user->id)->assessment()->where([
+			'exam_id' => $exam->id,
+			'status' => 0
+			])->get()->last();
+
+			$assessment->status = 1;
+			$assessment->score = $correct/count($input['steps']) ;
+			$assessment->save();
+
+			return redirect()->intended('/assessment/interactive/'.$input['code'].'/result');
+		}
+		public function saveAnswerInteractivePractice(Request $request)
 		{
 
 			$input = Input::all();
@@ -152,31 +181,7 @@ class FormsController extends Controller {
 
 			$assessment = User::find($user->id)->assessment()->where([
 				'exam_id' => $exam->id,
-				'status' => 0
-			])->get()->last();
-
-			$assessment->status = 1;
-			$assessment->score = $correct/count($input['steps']) ;
-			$assessment->save();
-
-			return redirect()->intended('/assessment/interactive/'.$input['code'].'/result');
-		}
-			public function saveAnswerInteractivePractice(Request $request)
-			{
-
-				$input = Input::all();
-				$exam = Exams::where(['code'=>$input['code']])->firstOrFail();
-				$user = User::find($request->user()->id);
-
-				$correct = 0;
-				foreach($input['steps'] as $k=>$v){
-					if(($k+1) != $v) break;
-					$correct++;
-				}
-
-				$assessment = User::find($user->id)->assessment()->where([
-					'exam_id' => $exam->id,
-					'status' => 3
+				'status' => 3
 				])->get()->last();
 
 				$assessment->status = 2;
@@ -185,35 +190,127 @@ class FormsController extends Controller {
 
 				return redirect()->intended('/assessment/interactivepractice/'.$input['code'].'/result');
 			}
-			
 
-		public function ajaxAuthenticateSupervisor(){
-			return [
-				'status' => (
-				Auth::attempt(['password' => Input::get('password'), 'level' => 2],false,false) ||
-				Auth::attempt(['password' => Input::get('password'), 'level' => 3],false,false) ||
-				Auth::attempt(['password' => Input::get('password'), 'level' => 4],false,false)
-				)
-			];
-		}
 
-		protected function removeuser(){
-			$data = Input::all();
-			if(!empty($data['id'])){
-				User::where('id',$data['id'])->delete();
+			public function ajaxAuthenticateSupervisor(){
+				return [
+					'status' => (
+					Auth::attempt(['password' => Input::get('password'), 'level' => 2],false,false) ||
+					Auth::attempt(['password' => Input::get('password'), 'level' => 3],false,false) ||
+					Auth::attempt(['password' => Input::get('password'), 'level' => 4],false,false)
+					)
+				];
 			}
-		}
 
-		protected function getuserdata(){
-			$data = Input::all();
-			if(!empty($data['id'])){
-				return User::where('id',$data['id'])->first();
+			protected function removeuser(){
+				$data = Input::all();
+				if(!empty($data['id'])){
+					User::where('id',$data['id'])->delete();
+				}
 			}
-		}
-		protected function edituser(){
-			$data = Input::all();
-			if(!empty($data['id'])){
-				$user = User::where('id',$data['id'])->first();
+
+			protected function getuserdata(){
+				$data = Input::all();
+				if(!empty($data['id'])){
+					return User::where('id',$data['id'])->first();
+				}
+			}
+			protected function edituser(){
+				$data = Input::all();
+				if(!empty($data['id'])){
+					$user = User::where('id',$data['id'])->first();
+					$levels = [
+						'Crew' => 0,
+						'Crew Chief' => 1,
+						'Manager' => 2,
+						'Head' => 3,
+						'Admin' => 4
+					];
+
+					$rules = [
+						'username' => 'required|unique:users,username,'.$user->id.'|max:255|alpha_num',
+						'fullname' => 'required|max:255|string',
+						'gender' => 'required',
+						'email' => 'required|email|max:255|unique:users,email,'.$user->id,
+
+					];
+
+					if(!empty($data['password'])){
+						$rules['newpassword'] = 'required|confirmed|min:6';
+					}
+
+					$validator = Validator::make(Input::all(), $rules);
+
+					if ($validator->fails()) {
+						return back()->withErrors($validator)->withInput();
+					}else{
+
+						$user->fullname = $data['fullname'];
+						$user->username = $data['username'];
+						$user->email = $data['email'];
+						$user->gender = $data['gender'];
+						$user->position = $data['position'];
+						$user->contact = $data['contact'];
+						$user->level = $levels[$data['position']];
+						if(!empty($data['newpassword'])){
+							$user->password = bcrypt($data['newpassword']);
+						}
+
+
+
+
+
+
+
+						$user->save();
+						return back();
+					}
+				}
+			}
+			protected function editprofile(){
+				$data = Input::all();
+
+				if(Auth::attempt(['password' => Input::get('password'), 'id' => Auth::id()],false,false)){
+					$user = User::where('id',Auth::id())->first();
+					$rules = [
+						'username' => 'required|unique:users,username,'.Auth::id().'|max:255|alpha_num',
+						'fullname' => 'required|max:255|string',
+						'gender' => 'required',
+						'email' => 'required|email|max:255|unique:users,email,'.Auth::id(),
+					];
+
+					if(!empty($data['newpassword'])){
+						$rules['newpassword'] = 'required|confirmed|min:6';
+					}
+
+					$validator = Validator::make(Input::all(), $rules);
+
+					if ($validator->fails()) {
+						return back()->withErrors($validator)->withInput();
+					}else{
+
+						$user->fullname = $data['fullname'];
+						$user->username = $data['username'];
+						$user->email = $data['email'];
+						$user->contact = $data['contact'];
+						$user->gender = $data['gender'];
+
+						if(!empty($data['newpassword'])){
+							$user->password = bcrypt($data['newpassword']);
+						}
+
+						$user->save();
+
+						return back();
+					}
+				}else{
+					return back()->withErrors(['Password Incorrect']);
+				}
+			}
+
+			protected function createuser()
+			{
+				$data = Input::all();
 				$levels = [
 					'Crew' => 0,
 					'Crew Chief' => 1,
@@ -222,168 +319,106 @@ class FormsController extends Controller {
 					'Admin' => 4
 				];
 
-				$rules = [
-					'username' => 'required|unique:users,username,'.$user->id.'|max:255|alpha_num',
-					'fullname' => 'required|max:255|string',
-					'gender' => 'required',
-					'email' => 'required|email|max:255|unique:users,email,'.$user->id,
-
-				];
-
-				if(!empty($data['password'])){
-					$rules['newpassword'] = 'required|confirmed|min:6';
-				}
-
-				$validator = Validator::make(Input::all(), $rules);
-
-				if ($validator->fails()) {
-					return back()->withErrors($validator)->withInput();
-				}else{
-
-					$user->fullname = $data['fullname'];
-					$user->username = $data['username'];
-					$user->email = $data['email'];
-					$user->gender = $data['gender'];
-					$user->position = $data['position'];
-					$user->level = $levels[$data['position']];
-					if(!empty($data['newpassword'])){
-						$user->password = bcrypt($data['newpassword']);
-					}
-
-
-
-
-
-
-
-					$user->save();
-					return back();
-				}
+				User::create([
+					'fullname' => $data['fullname'],
+					'username' => $data['username'],
+					'email' => $data['email'],
+					'gender' => $data['gender'],
+					'contact' => $data['contact'],
+					'position' => $data['position'],
+					'level' => $levels[$data['position']],
+					'password' => bcrypt($data['password']),
+				]);
+				return back();
 			}
-		}
-		protected function editprofile(){
-			$data = Input::all();
-
-			if(Auth::attempt(['password' => Input::get('password'), 'id' => Auth::id()],false,false)){
-				$user = User::where('id',Auth::id())->first();
-				$rules = [
-					'username' => 'required|unique:users,username,'.Auth::id().'|max:255|alpha_num',
-					'fullname' => 'required|max:255|string',
-					'gender' => 'required',
-					'email' => 'required|email|max:255|unique:users,email,'.Auth::id(),
-				];
-
-				if(!empty($data['newpassword'])){
-					$rules['newpassword'] = 'required|confirmed|min:6';
-				}
-
-				$validator = Validator::make(Input::all(), $rules);
-
-				if ($validator->fails()) {
-					return back()->withErrors($validator)->withInput();
-				}else{
-
-					$user->fullname = $data['fullname'];
-					$user->username = $data['username'];
-					$user->email = $data['email'];
-					$user->gender = $data['gender'];
-
-					if(!empty($data['newpassword'])){
-						$user->password = bcrypt($data['newpassword']);
-					}
-
-					$user->save();
-
-					return back();
-				}
-			}else{
-				return back()->withErrors(['Password Incorrect']);
-			}
-		}
-
-		protected function createuser()
-		{
-			$data = Input::all();
-			$levels = [
-				'Crew' => 0,
-				'Crew Chief' => 1,
-				'Manager' => 2,
-				'Head' => 3,
-				'Admin' => 4
-			];
-
-			User::create([
-				'fullname' => $data['fullname'],
-				'username' => $data['username'],
-				'email' => $data['email'],
-				'gender' => $data['gender'],
-				'position' => $data['position'],
-				'level' => $levels[$data['position']],
-				'password' => bcrypt($data['password']),
-			]);
-			return back();
-		}
-		protected function addEvent()
-		{
-			$data = Input::all();
-			Events::create([
-				'title' => $data['title'],
-				'class' => $data['class'],
-				'start' => date("Y-m-d H:i:s",strtotime($data['start'])) ,
-				'end' => date("Y-m-d H:i:s",strtotime($data['end'])),
-			]);
-
-
-
-			return back();
-		}
-		protected function getEvents()
-		{
-			$events = [];
-			$start = Input::get('from') / 1000;
-			$end   = Input::get('to') / 1000;
-			foreach(Events::
-				whereBetween('start', [date('Y-m-d', $start), date('Y-m-d', $end)])->
-				whereBetween('end', [date('Y-m-d', $start), date('Y-m-d', $end)])->
-				get() as $e) {
-					$events[] = array(
-						'id' => $e->id,
-						'title' => $e->title,
-						'url' => '#',
-						'class' => $e->class,
-						'start' => strtotime($e->start) . '000',
-						'end' => strtotime($e->end) .'000'
-					);
-				}
-
-				echo json_encode(array('success' => 1, 'result' => $events));
-			}
-			protected function updateprofilepic()
+			protected function addEvent(Request $request)
 			{
 				$data = Input::all();
 
-				$image = Input::file('file');
-				$outputname = hash('crc32b',Auth::id());
-				$moveFolder = public_path().DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.'profile'.DIRECTORY_SEPARATOR;
-				Image::make($image)->fit(150, 150, function ($constraint) {
-					$constraint->aspectRatio();
-					$constraint->upsize();
-				})->save($moveFolder.$outputname.'.jpg');
+				Events::create([
+					'title' => $data['title'] . '@@' . implode(',',$data['participants']),
+					'class' => $data['class'],
+					'start' => date("Y-m-d H:i:s",strtotime($data['start'])) ,
+					'end' => date("Y-m-d H:i:s",strtotime($data['end'])),
+				]);
+
+				$mobile = Auth::user()->contact;
+				$participants = [];
+				if(strpos($data['title'],'@@'))
+				$participants = explode(',',substr($data['title'],strpos($data['title'],'@@')+2));
+				if(!empty($participants))
+				$participants = User::select('id','fullname','position','contact')->whereIn("id",$participants)->get();
+
+				foreach ($participants as $p) {
+					if(!empty($p->contact)){
+						\Chikka::send($p->contact, 'CDTS App | [' . strtoupper($data['class']) . '] '.
+						$data['title'] . ' . From : ' .
+						date("M j, Y, g:i a",strtotime($data['start'])) . ' - ' .
+						date("M j, Y, g:i a",strtotime($data['end'])).'
+
+						Created by ' .
+						Auth::user()->fullname . '
+
+						.');
+					}
+				}
+
+				return back();
+			}
+			protected function getEvents()
+			{
+				$events = [];
+				$start = Input::get('from') / 1000;
+				$end   = Input::get('to') / 1000;
+				foreach(Events::
+					whereBetween('start', [date('Y-m-d', $start), date('Y-m-d', $end)])->
+					whereBetween('end', [date('Y-m-d', $start), date('Y-m-d', $end)])->
+					get() as $e) {
+						$participants = [];
+						if(strpos($e->title,'@@'))
+						$participants = explode(',',substr($e->title,strpos($e->title,'@@')+2));
+						if(!empty($participants))
+						$participants = User::select('id','fullname','position')->whereIn("id",$participants)->get();
+						$events[] = array(
+							'id' => $e->id,
+							'title' => $e->title,
+							'url' => '#',
+							'participants' => $participants,
+							'class' => $e->class,
+							'start' => strtotime($e->start) . '000',
+							'end' => strtotime($e->end) .'000'
+						);
+					}
+
+					echo json_encode(array('success' => 1, 'result' => $events));
+				}
+
+				protected function updateprofilepic()
+				{
+					$data = Input::all();
+
+					$image = Input::file('file');
+					$outputname = hash('crc32b',Auth::id());
+					$moveFolder = public_path().DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.'profile'.DIRECTORY_SEPARATOR;
+					Image::make($image)->fit(150, 150, function ($constraint) {
+						$constraint->aspectRatio();
+						$constraint->upsize();
+					})->save($moveFolder.$outputname.'.jpg');
+				}
+
+				protected function getLogout(){
+					if(Auth::check()){
+						$thisactivity = new Activity();
+						$thisactivity->createActivity(
+						Auth::user(),
+						'login',
+						'have logged out',
+						0
+					);
+				}
+				Auth::logout();
+				Session::flush();
+				return redirect()->intended('/login');
 			}
 
-			protected function getLogout(){
-				if(Auth::check()){
-					$thisactivity = new Activity();
-					$thisactivity->createActivity(
-					Auth::user(),
-					'login',
-					'have logged out',
-					0
-				);
-			}
-			Auth::logout();
-			Session::flush();
-			return redirect()->intended('/login');
 		}
-
-	}
