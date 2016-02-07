@@ -29,6 +29,7 @@ Route::post('/register', 'Auth\AuthController@postRegister');
 Route::get('/home', 'StaticsController@home');
 Route::get('/training', 'StaticsController@training');
 Route::get('/training/browser/{type}', 'StaticsController@browser');
+Route::post('/training/browser/{type}', 'StaticsController@browserupload');
 Route::get('/assessment', 'StaticsController@assessment');
 Route::get('/assessment/interactive/{id}', 'StaticsController@interactive');
 Route::get('/assessment/interactivepractice/{id}', 'StaticsController@interactivepractice');
