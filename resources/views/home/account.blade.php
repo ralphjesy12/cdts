@@ -78,6 +78,10 @@
 									<td>{{ !empty($userobj->contact) ? $userobj->contact : 'None. Set contact number to receive SMS notifications' }}</td>
 								</tr>
 								<tr>
+									<td>Station</td>
+									<td>{{ $userobj->station }}</td>
+								</tr>
+								<tr>
 									<td>Position</td>
 									<td>{{ $userobj->position }}</td>
 								</tr>

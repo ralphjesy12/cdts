@@ -21,6 +21,11 @@ html,body{
                     <td>{{ $user->position }}</td>
                 </tr>
                 <tr>
+                    <td><b>Station</b></td>
+                    <td style="width:50px;text-align:center;"> : </td>
+                    <td>{{ $user->station }}</td>
+                </tr>
+                <tr>
                     <td><b>Crew Service Date</b></td>
                     <td width="50" align="center"> : </td>
                     <td>{{ $user->created_at->toFormattedDateString() }}</td>
@@ -60,6 +65,7 @@ html,body{
                 <th>Date Taken</th>
                 <th>Name</th>
                 <th>Position</th>
+                <th>Station</th>
                 <th>Exam Title</th>
                 <th>Remarks</th>
                 <th>Rating</th>
@@ -71,6 +77,7 @@ html,body{
                             <td>{{ $a->created_at->toFormattedDateString() }}</td>
                             <td>{{ $a->user()->first()->fullname }}</td>
                             <td>{{ $a->user()->first()->position }}</td>
+                            <td>{{ $a->user()->first()->station }}</td>
                             <td>{{ $a->exam()->first()->title }}</td>
                             <td>{{ $a->score > 0.7 ? 'Passed' : 'Failed'}}</td>
                             <td>{{ $a->score * 100 }}%</td>
@@ -78,7 +85,7 @@ html,body{
                     @endforeach
                 @else
                     <tr>
-                        <td colspan="6" class="text-center">
+                        <td colspan="7" class="text-center">
                             No Examinations Found
                         </td>
                     </tr>

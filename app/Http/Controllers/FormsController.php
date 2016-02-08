@@ -250,6 +250,7 @@ class FormsController extends Controller {
 						$user->email = $data['email'];
 						$user->gender = $data['gender'];
 						$user->position = $data['position'];
+						$user->station = $data['station'];
 						$user->contact = $data['contact'];
 						$user->level = $levels[$data['position']];
 						if(!empty($data['newpassword'])){
@@ -325,6 +326,7 @@ class FormsController extends Controller {
 					'email' => $data['email'],
 					'gender' => $data['gender'],
 					'contact' => $data['contact'],
+					'station' => $data['station'],
 					'position' => $data['position'],
 					'level' => $levels[$data['position']],
 					'password' => bcrypt($data['password']),
