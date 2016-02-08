@@ -31,7 +31,9 @@ $(function(){
 			$('#modal-add-edit [name="username"]').val(response.username);
 			$('#modal-add-edit [name="email"]').val(response.email);
 			$('#modal-add-edit [name="fullname"]').val(response.fullname);
-			$('#modal-add-edit [name="position"] option:contains("'+response.position+'")').prop('selected',true);
+			$('#modal-add-edit [name="station"]').val(response.station);
+			$('#modal-add-edit [name="contact"]').val(response.contact);
+			$('#modal-add-edit [name="position"] option:contains("'+response.position+'")').first().prop('selected',true);
 			$('#modal-add-edit [name="gender"][value="' + response.gender + '"]').prop('checked',true);
 			$('#modal-add-edit').modal('show');
 			$(_this).html('<i class="fa fa-fw fa-edit"></i>');
