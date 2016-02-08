@@ -37,6 +37,7 @@
 							<th>User Name</th>
 							<th>Email</th>
 							<th>Contact</th>
+							<th>Station</th>
 							<th>Position</th>
 							<th>Level</th>
 							<th>Join Date</th>
@@ -50,6 +51,7 @@
 									<td>{{ $u->username }}</td>
 									<td>{{ $u->email }}</td>
 									<td>{{ $u->contact }}</td>
+									<td>{{ $u->station }}</td>
 									<td>{{ $u->position }}</td>
 									<td>{{ $u->level }}</td>
 									<td><span title="{{ $u->created_at->toRfc850String() }}">{{ $u->created_at->diffForHumans() }}</span></td>
@@ -67,7 +69,7 @@
 							@endforeach
 						</tbody>
 						<tfoot>
-							<th colspan="9" class="text-right">
+							<th colspan="10" class="text-right">
 								<div class="btn-group">
 									<button class="btn btn-default btn-xs" data-toggle="modal" data-target="#modal-add-user"><i class="fa fa-fw fa-plus"></i>Add User</button>
 								</div>
@@ -133,6 +135,11 @@
 								<div class="form-group">
 									<label for="reg_fullname" class="sr-only">Full Name</label>
 									<input type="text" class="form-control" id="reg_fullname" name="fullname" placeholder="full name">
+								</div>
+
+								<div class="form-group">
+									<label for="reg_station" class="sr-only">Station</label>
+									<input type="text" class="form-control" id="reg_station" name="station" placeholder="station">
 								</div>
 								<div class="form-group">
 									<label for="reg_fullname" class="sr-only">Position</label>
@@ -203,6 +210,10 @@
 								<div class="form-group">
 									<label for="reg_fullname" class="sr-only">Full Name</label>
 									<input type="text" class="form-control" id="reg_fullname" name="fullname" placeholder="full name">
+								</div>
+								<div class="form-group">
+									<label for="reg_station" class="sr-only">Station</label>
+									<input type="text" class="form-control" id="reg_station" name="station" placeholder="station">
 								</div>
 								<div class="form-group">
 									<label for="reg_fullname" class="sr-only">Position</label>

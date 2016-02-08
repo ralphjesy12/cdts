@@ -430,6 +430,11 @@ tbody:before, tbody:after { display: none; }
                 <td>{{ $user->position }}</td>
             </tr>
             <tr>
+                <td><b>Station</b></td>
+                <td style="width:50px;text-align:center;"> : </td>
+                <td>{{ $user->station }}</td>
+            </tr>
+            <tr>
                 <td><b>Crew Service Date</b></td>
                 <td style="width:50px;text-align:center;"> : </td>
                 <td>{{ $user->created_at->toFormattedDateString() }}</td>
