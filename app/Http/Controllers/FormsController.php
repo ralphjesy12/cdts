@@ -336,7 +336,6 @@ class FormsController extends Controller {
 			protected function addEvent(Request $request)
 			{
 				$data = Input::all();
-
 				Events::create([
 					'title' => $data['title'] . '@@' . implode(',',$data['participants']),
 					'class' => $data['class'],
@@ -344,27 +343,27 @@ class FormsController extends Controller {
 					'end' => date("Y-m-d H:i:s",strtotime($data['end'])),
 				]);
 
-				$mobile = Auth::user()->contact;
-				$participants = [];
-				if(strpos($data['title'],'@@'))
-				$participants = explode(',',substr($data['title'],strpos($data['title'],'@@')+2));
+				$participants = $data['participants'];
+
 				if(!empty($participants))
 				$participants = User::select('id','fullname','position','contact')->whereIn("id",$participants)->get();
 
+				$credentials = \Config::get('chikka');
 				foreach ($participants as $p) {
 					if(!empty($p->contact)){
-						\Chikka::send($p->contact, 'CDTS App | [' . strtoupper($data['class']) . '] '.
+						$contact = $p->contact;
+						$message = 'To : '.$p->fullname.' | CDTS App | [' . strtoupper($data['class']) . '] '.
 						$data['title'] . ' . From : ' .
 						date("M j, Y, g:i a",strtotime($data['start'])) . ' - ' .
-						date("M j, Y, g:i a",strtotime($data['end'])).'
-
-						Created by ' .
-						Auth::user()->fullname . '
-
-						.');
+						date("M j, Y, g:i a",strtotime($data['end'])).'. Created by ' .
+						Auth::user()->fullname . '. ';
+						$messages = str_split($message,150);
+						$chikka = new Chikka($credentials);
+						foreach ($messages as $message) {
+							$sent = $chikka->send($contact, $message);
+						}
 					}
 				}
-
 				return back();
 			}
 			protected function getEvents()
