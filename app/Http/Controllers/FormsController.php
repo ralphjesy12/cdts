@@ -341,6 +341,7 @@ class FormsController extends Controller {
 					'class' => $data['class'],
 					'start' => date("Y-m-d H:i:s",strtotime($data['start'])) ,
 					'end' => date("Y-m-d H:i:s",strtotime($data['end'])),
+					'url' => $data['isprivate']
 				]);
 
 				$participants = $data['participants'];
@@ -371,55 +372,61 @@ class FormsController extends Controller {
 				$events = [];
 				$start = Input::get('from') / 1000;
 				$end   = Input::get('to') / 1000;
-				foreach(Events::
-					whereBetween('start', [date('Y-m-d', $start), date('Y-m-d', $end)])->
-					whereBetween('end', [date('Y-m-d', $start), date('Y-m-d', $end)])->
-					get() as $e) {
-						$participants = [];
-						if(strpos($e->title,'@@'))
-						$participants = explode(',',substr($e->title,strpos($e->title,'@@')+2));
-						if(!empty($participants))
-						$participants = User::select('id','fullname','position')->whereIn("id",$participants)->get();
-						$events[] = array(
-							'id' => $e->id,
-							'title' => $e->title,
-							'url' => '#',
-							'participants' => $participants,
-							'class' => $e->class,
-							'start' => strtotime($e->start) . '000',
-							'end' => strtotime($e->end) .'000'
-						);
-					}
-
-					echo json_encode(array('success' => 1, 'result' => $events));
+				$events = Events::
+				whereBetween('start', [date('Y-m-d', $start), date('Y-m-d', $end)])->
+				whereBetween('end', [date('Y-m-d', $start), date('Y-m-d', $end)]);
+				
+				if(!in_array(Auth::user()->level,[4,3,2])){
+					$events->where('url','<>','on');
 				}
 
-				protected function updateprofilepic()
-				{
-					$data = Input::all();
-
-					$image = Input::file('file');
-					$outputname = hash('crc32b',Auth::id());
-					$moveFolder = public_path().DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.'profile'.DIRECTORY_SEPARATOR;
-					Image::make($image)->fit(150, 150, function ($constraint) {
-						$constraint->aspectRatio();
-						$constraint->upsize();
-					})->save($moveFolder.$outputname.'.jpg');
-				}
-
-				protected function getLogout(){
-					if(Auth::check()){
-						$thisactivity = new Activity();
-						$thisactivity->createActivity(
-						Auth::user(),
-						'login',
-						'have logged out',
-						0
+				$events = $events->get();
+				foreach($events as $e) {
+					$participants = [];
+					if(strpos($e->title,'@@'))
+					$participants = explode(',',substr($e->title,strpos($e->title,'@@')+2));
+					if(!empty($participants))
+					$participants = User::select('id','fullname','position')->whereIn("id",$participants)->get();
+					$events[] = array(
+						'id' => $e->id,
+						'title' => $e->title,
+						'url' => '#',
+						'participants' => $participants,
+						'class' => $e->class,
+						'start' => strtotime($e->start) . '000',
+						'end' => strtotime($e->end) .'000'
 					);
 				}
-				Auth::logout();
-				Session::flush();
-				return redirect()->intended('/login');
+
+				echo json_encode(array('success' => 1, 'result' => $events));
 			}
 
+			protected function updateprofilepic()
+			{
+				$data = Input::all();
+
+				$image = Input::file('file');
+				$outputname = hash('crc32b',Auth::id());
+				$moveFolder = public_path().DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.'profile'.DIRECTORY_SEPARATOR;
+				Image::make($image)->fit(150, 150, function ($constraint) {
+					$constraint->aspectRatio();
+					$constraint->upsize();
+				})->save($moveFolder.$outputname.'.jpg');
+			}
+
+			protected function getLogout(){
+				if(Auth::check()){
+					$thisactivity = new Activity();
+					$thisactivity->createActivity(
+					Auth::user(),
+					'login',
+					'have logged out',
+					0
+				);
+			}
+			Auth::logout();
+			Session::flush();
+			return redirect()->intended('/login');
 		}
+
+	}

@@ -17,6 +17,13 @@
 		width: 100%;
 		display: block;
 		text-align: center;
+		<?php
+		if(!in_array(Auth::user()->level,[4,3,2])){
+			?>
+			display:none;
+			<?php
+		}
+		?>
 	}
 	#calendar .cal-cell:hover .addEvent{
 		opacity: 1;
@@ -59,7 +66,7 @@
 				display_week_numbers: false,
 				weekbox: false,
 				onAfterEventsLoad: function(events) {
-								
+
 				},
 				onAfterViewLoad: function(view) {
 					$('.page-header h3').text(this.getTitle());
@@ -244,6 +251,12 @@
 								</select>
 							</div>
 
+								<div class="checkbox">
+									<label>
+										<input type="checkbox" name="isprivate" > Private Event
+									</label>
+									<span class="help-block">Only Managers can see this event</span>
+								</div>
 						</div>
 						<div class="modal-footer">
 							<button  type="submit" class="btn btn-danger">Save</button>
