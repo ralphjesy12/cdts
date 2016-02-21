@@ -31,8 +31,23 @@ Route::get('/training', 'StaticsController@training');
 Route::get('/training/browser/{type}', 'StaticsController@browser');
 Route::post('/training/browser/{type}', 'StaticsController@browserupload');
 Route::get('/assessment', 'StaticsController@assessment');
+
+
+// Mc Burger
 Route::get('/assessment/interactive/mcburger', 'StaticsController@interactive_mcburger');
 Route::get('/assessment/interactivepractice/mcburger', 'StaticsController@interactivepractice_mcburger');
+
+Route::post('/form/saveAnswerInteractiveMcburger', 'FormsController@saveAnswerInteractiveMcburger');
+Route::post('/form/saveAnswerInteractivePracticeMcburger', 'FormsController@saveAnswerInteractivePracticeMcburger');
+
+// Grill Station
+Route::get('/assessment/interactive/grill', 'StaticsController@interactive_grill');
+Route::get('/assessment/interactivepractice/grill', 'StaticsController@interactivepractice_grill');
+
+Route::post('/form/saveAnswerInteractivegrill', 'FormsController@saveAnswerInteractivegrill');
+Route::post('/form/saveAnswerInteractivePracticegrill', 'FormsController@saveAnswerInteractivePracticegrill');
+
+
 Route::get('/assessment/interactive/{id}', 'StaticsController@interactive');
 Route::get('/assessment/interactivepractice/{id}', 'StaticsController@interactivepractice');
 Route::get('/assessment/interactive/{id}/result', 'StaticsController@interactiveResult');
@@ -58,8 +73,6 @@ Route::post('/form/saveExamInteractive', 'FormsController@saveExamInteractive');
 Route::post('/form/saveQuestion', 'FormsController@saveQuestion');
 Route::post('/form/saveAnswer', 'FormsController@saveAnswer');
 Route::post('/form/saveAnswerInteractive', 'FormsController@saveAnswerInteractive');
-Route::post('/form/saveAnswerInteractiveMcburger', 'FormsController@saveAnswerInteractiveMcburger');
-Route::post('/form/saveAnswerInteractivePracticeMcburger', 'FormsController@saveAnswerInteractivePracticeMcburger');
 Route::post('/form/saveAnswerInteractivePractice', 'FormsController@saveAnswerInteractivePractice');
 Route::post('/form/createuser', 'FormsController@createuser');
 Route::post('/form/removeuser', 'FormsController@removeuser');
