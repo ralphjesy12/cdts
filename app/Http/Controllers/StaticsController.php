@@ -313,6 +313,33 @@ class StaticsController extends Controller {
 			return view('home.interactivepractice_grill',$this->data);
 		}
 
+
+				public function interactive_spaghetti(Request $request){
+
+					$user = User::find($request->user()->id);
+					$exam = Exams::where(['code'=>'spaghetti'])->firstOrFail();
+					$thisassess = $user->assessment()->create([
+						'exam_id' => $exam->id,
+						'status' => 0
+					]);
+
+					return view('home.interactive_spaghetti',$this->data);
+				}
+
+
+				public function interactivepractice_spaghetti(Request $request)
+				{
+
+					$user = User::find($request->user()->id);
+					$exam = Exams::where(['code'=>'spaghetti'])->firstOrFail();
+					$thisassess = $user->assessment()->create([
+						'exam_id' => $exam->id,
+						'status' => 3
+					]);
+
+					return view('home.interactivepractice_spaghetti',$this->data);
+				}
+
 	public function exams($type,Request $request)
 	{
 		$user = User::find($request->user()->id);
@@ -341,6 +368,20 @@ class StaticsController extends Controller {
 					'code' => 'grill',
 					'title' => 'Grill Station',
 					'items' => 4,
+					'attempts' => 3,
+					'type' => 'Interactive',
+					'status' => 1
+				]);
+
+				$this->data['exams'][] = $exam->toArray();
+
+			}
+			// Custom Create Spaghetti Station
+			if(Exams::where('code','spaghetti')->count()<1){
+				$exam = Exams::create([
+					'code' => 'spaghetti',
+					'title' => 'Spaghetti Station',
+					'items' => 3,
 					'attempts' => 3,
 					'type' => 'Interactive',
 					'status' => 1

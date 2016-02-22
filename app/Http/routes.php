@@ -46,6 +46,12 @@ Route::get('/assessment/interactivepractice/grill', 'StaticsController@interacti
 
 Route::post('/form/saveAnswerInteractivegrill', 'FormsController@saveAnswerInteractivegrill');
 Route::post('/form/saveAnswerInteractivePracticegrill', 'FormsController@saveAnswerInteractivePracticegrill');
+// Spaghetti
+Route::get('/assessment/interactive/spaghetti', 'StaticsController@interactive_spaghetti');
+Route::get('/assessment/interactivepractice/spaghetti', 'StaticsController@interactivepractice_spaghetti');
+
+Route::post('/form/saveAnswerInteractivespaghetti', 'FormsController@saveAnswerInteractivespaghetti');
+Route::post('/form/saveAnswerInteractivePracticespaghetti', 'FormsController@saveAnswerInteractivePracticespaghetti');
 
 
 Route::get('/assessment/interactive/{id}', 'StaticsController@interactive');

@@ -290,6 +290,67 @@ class FormsController extends Controller {
 
 
 
+														public function saveAnswerInteractivespaghetti(Request $request)
+														{
+
+															$input = Input::all();
+															$exam = Exams::where(['code'=>'spaghetti'])->firstOrFail();
+															$user = User::find($request->user()->id);
+
+															$correct = 0;
+															foreach($input['steps'] as $k=>$v){
+																if(($k+1) != $v) break;
+																$correct++;
+															}
+
+															$assessment = User::find($user->id)->assessment()->where([
+																'exam_id' => $exam->id,
+																'status' => 0
+																])->firstOrFail();
+
+
+																$assessment->status = 1;
+																$assessment->score = $correct/count($input['steps']) ;
+																$assessment->save();
+
+																return redirect()->intended('/assessment/interactive/'.$input['code'].'/result');
+															}
+
+
+
+															public function saveAnswerInteractivePracticespaghetti(Request $request)
+															{
+
+																$input = Input::all();
+																$exam = Exams::where(['code'=>'spaghetti'])->firstOrFail();
+																$user = User::find($request->user()->id);
+
+																$correct = 0;
+																foreach($input['steps'] as $k=>$v){
+																	if(($k+1) != $v) break;
+																	$correct++;
+																}
+
+																$assessment = User::find($user->id)->assessment()->where([
+																	'exam_id' => $exam->id,
+																	'status' => 3
+																	])->firstOrFail();
+
+
+																	$assessment->status = 2;
+																	$assessment->score = $correct/count($input['steps']) ;
+																	$assessment->save();
+
+																	return redirect()->intended('/assessment/interactivepractice/'.$input['code'].'/result');
+																}
+
+
+
+
+
+
+
+
 
 
 				public function saveAnswerInteractivePractice(Request $request)
