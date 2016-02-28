@@ -48,7 +48,9 @@
 					left : traystats.left + ( traywidth / 2) - (cloneimg.width() / 2)
 				});
 				setTimeout(function(){
-					$('#assembly-tray').css('background-image','url("'+cloneimg.attr('src')+'")');
+
+						var newsrc = cloneimg.attr('data-swf');
+					$('#assembly-tray').html('<object codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7" classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" type="application/x-oleobject"> <param name="src" value="' + newsrc + '" style="width:100%;height:100%;"> <param name="quality" value="high" /> <param name="bgcolor" value="#ffffff" /> <param name="play" value="true" /> <param name="loop" value="true" /> <param name="wmode" value="window" /> <param name="scale" value="showall" /> <param name="menu" value="true" /> <param name="devicefont" value="false" /> <param name="salign" value="" /> <param name="allowScriptAccess" value="sameDomain" /> <embed src="' + newsrc + '" type="application/x-shockwave-flash" pluginspage="http://www.adobe.com/go/getflashplayer"  style="width:100%;height:100%;"></embed> </object>');
 					cloneimg.remove();
 				},300)
 			},300)
@@ -80,19 +82,23 @@
 				$steps = [
 					[
 						'step' => 'Place patty on the grill',
-						'img' => 'step1.jpg'
+						'thumb' => 'step1.jpg',
+						'swf' => 'step1.swf',
 					],
 					[
 						'step' => 'Press green button to close grill',
-						'img' => 'step2.png'
+						'thumb' => 'step2.jpg',
+						'swf' => 'step2.swf',
 					],
 					[
 						'step' => 'Grill opens automatically',
-						'img' => 'step3.jpg'
+						'thumb' => 'step3.png',
+						'swf' => 'step3.swf',
 					],
 					[
 						'step' => 'Transfer patties',
-						'img' => 'step4.jpg'
+						'thumb' => 'step4.jpg',
+						'swf' => 'step4.swf',
 					]
 				];
 				?>
@@ -100,7 +106,7 @@
 					<li>
 						<div class="item">
 							<a href="#">
-								<img src="{{ asset('img/interactive/grill/'.($s['img']).'') }}" alt="{{ str_slug($s['step']) }}" class="img-responsive" data-step="{{ ($k+1) }}">
+								<img src="{{ asset('img/interactive/grill/'.($s['thumb']).'') }}" alt="{{ str_slug($s['step']) }}" data-swf="{{ asset('img/interactive/grill/'.($s['swf']).'') }}" class="img-responsive" data-step="{{ ($k+1) }}">
 							</a>
 							<input type="hidden" name="steps[]" value="{{ $k }}">
 							<div class="content">

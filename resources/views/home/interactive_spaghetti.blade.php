@@ -48,7 +48,9 @@
 					left : traystats.left + ( traywidth / 2) - (cloneimg.width() / 2)
 				});
 				setTimeout(function(){
-					$('#assembly-tray').css('background-image','url("'+cloneimg.attr('src')+'")');
+					var newsrc = cloneimg.attr('data-swf');
+					$('#assembly-tray').html('<object codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7" classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" type="application/x-oleobject"> <param name="src" value="' + newsrc + '" style="width:100%;height:100%;"> <param name="quality" value="high" /> <param name="bgcolor" value="#ffffff" /> <param name="play" value="true" /> <param name="loop" value="true" /> <param name="wmode" value="window" /> <param name="scale" value="showall" /> <param name="menu" value="true" /> <param name="devicefont" value="false" /> <param name="salign" value="" /> <param name="allowScriptAccess" value="sameDomain" /> <embed src="' + newsrc + '" type="application/x-shockwave-flash" pluginspage="http://www.adobe.com/go/getflashplayer"  style="width:100%;height:100%;"></embed> </object>');
+
 					cloneimg.remove();
 				},300)
 			},300)
@@ -80,15 +82,18 @@
 				$steps = [
 					[
 						'step' => 'Place spaghettin in the q-ing oven',
-						'img' => 'step1.jpg'
+						'thumb' => 'step1.jpg',
+						'swf' => 'step1.swf'
 					],
 					[
 						'step' => 'Add some spaghetti sauce ',
-						'img' => 'step2.jpg'
+						'thumb' => 'step2.jpg',
+						'swf' => 'step2.swf'
 					],
 					[
 						'step' => 'Add some cheese.',
-						'img' => 'step3.jpg'
+						'thumb' => 'step3.jpg',
+						'swf' => 'step3.swf'
 					]
 				];
 				?>
@@ -96,7 +101,7 @@
 					<li>
 						<div class="item">
 							<a href="#">
-								<img src="{{ asset('img/interactive/spaghetti/'.($s['img']).'') }}" alt="{{ str_slug($s['step']) }}" class="img-responsive" data-step="{{ ($k+1) }}">
+								<img src="{{ asset('img/interactive/spaghetti/'.($s['thumb']).'') }}" alt="{{ str_slug($s['step']) }}" data-swf="{{ asset('img/interactive/spaghetti/'.($s['swf']).'') }}" class="img-responsive" data-step="{{ ($k+1) }}">
 							</a>
 							<input type="hidden" name="steps[]" value="{{ $k }}">
 							<div class="content">
@@ -108,15 +113,15 @@
 					</li>
 				@endforeach
 			</ul>
-			<div id="assembly-tray" style="background-image:url('{{ asset('img/interactive/spaghetti/background.jpg') }}')">
-			</div>
-
-			<form id="submission-form" action="/form/saveAnswerInteractivespaghetti" method="POST">
-				{!! csrf_field() !!}
-				<input type="hidden" name="code" value="spaghetti">
-				<h3>NOW LET'S CHECK IF YOU GOT IT RIGHT</h3>
-				<button id="btn-check" class="btn btn-warning btn-lg">CHECK MY RECIPE</button>
-			</form>
-		</div>
+			<div id="assembly-tray" style="background-image:url('{{ asset('img/interactive/spaghetti/background.jpg') }}')"></div>
 	</div>
+
+	<form id="submission-form" action="/form/saveAnswerInteractivespaghetti" method="POST">
+		{!! csrf_field() !!}
+		<input type="hidden" name="code" value="spaghetti">
+		<h3>NOW LET'S CHECK IF YOU GOT IT RIGHT</h3>
+		<button id="btn-check" class="btn btn-warning btn-lg">CHECK MY RECIPE</button>
+	</form>
+</div>
+</div>
 @endsection

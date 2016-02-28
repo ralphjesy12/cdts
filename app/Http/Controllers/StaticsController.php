@@ -287,58 +287,85 @@ class StaticsController extends Controller {
 	}
 
 
-		public function interactive_grill(Request $request){
+	public function interactive_grill(Request $request){
 
-			$user = User::find($request->user()->id);
-			$exam = Exams::where(['code'=>'grill'])->firstOrFail();
-			$thisassess = $user->assessment()->create([
-				'exam_id' => $exam->id,
-				'status' => 0
-			]);
+		$user = User::find($request->user()->id);
+		$exam = Exams::where(['code'=>'grill'])->firstOrFail();
+		$thisassess = $user->assessment()->create([
+			'exam_id' => $exam->id,
+			'status' => 0
+		]);
 
-			return view('home.interactive_grill',$this->data);
-		}
-
-
-		public function interactivepractice_grill(Request $request)
-		{
-
-			$user = User::find($request->user()->id);
-			$exam = Exams::where(['code'=>'grill'])->firstOrFail();
-			$thisassess = $user->assessment()->create([
-				'exam_id' => $exam->id,
-				'status' => 3
-			]);
-
-			return view('home.interactivepractice_grill',$this->data);
-		}
+		return view('home.interactive_grill',$this->data);
+	}
 
 
-				public function interactive_spaghetti(Request $request){
+	public function interactivepractice_grill(Request $request)
+	{
 
-					$user = User::find($request->user()->id);
-					$exam = Exams::where(['code'=>'spaghetti'])->firstOrFail();
-					$thisassess = $user->assessment()->create([
-						'exam_id' => $exam->id,
-						'status' => 0
-					]);
+		$user = User::find($request->user()->id);
+		$exam = Exams::where(['code'=>'grill'])->firstOrFail();
+		$thisassess = $user->assessment()->create([
+			'exam_id' => $exam->id,
+			'status' => 3
+		]);
 
-					return view('home.interactive_spaghetti',$this->data);
-				}
+		return view('home.interactivepractice_grill',$this->data);
+	}
 
 
-				public function interactivepractice_spaghetti(Request $request)
-				{
+	public function interactive_spaghetti(Request $request){
 
-					$user = User::find($request->user()->id);
-					$exam = Exams::where(['code'=>'spaghetti'])->firstOrFail();
-					$thisassess = $user->assessment()->create([
-						'exam_id' => $exam->id,
-						'status' => 3
-					]);
+		$user = User::find($request->user()->id);
+		$exam = Exams::where(['code'=>'spaghetti'])->firstOrFail();
+		$thisassess = $user->assessment()->create([
+			'exam_id' => $exam->id,
+			'status' => 0
+		]);
 
-					return view('home.interactivepractice_spaghetti',$this->data);
-				}
+		return view('home.interactive_spaghetti',$this->data);
+	}
+
+
+	public function interactivepractice_spaghetti(Request $request)
+	{
+
+		$user = User::find($request->user()->id);
+		$exam = Exams::where(['code'=>'spaghetti'])->firstOrFail();
+		$thisassess = $user->assessment()->create([
+			'exam_id' => $exam->id,
+			'status' => 3
+		]);
+
+		return view('home.interactivepractice_spaghetti',$this->data);
+	}
+
+
+	public function interactive_fries(Request $request){
+
+		$user = User::find($request->user()->id);
+		$exam = Exams::where(['code'=>'fries'])->firstOrFail();
+		$thisassess = $user->assessment()->create([
+			'exam_id' => $exam->id,
+			'status' => 0
+		]);
+
+		return view('home.interactive_fries',$this->data);
+	}
+
+
+	public function interactivepractice_fries(Request $request)
+	{
+
+		$user = User::find($request->user()->id);
+		$exam = Exams::where(['code'=>'fries'])->firstOrFail();
+		$thisassess = $user->assessment()->create([
+			'exam_id' => $exam->id,
+			'status' => 3
+		]);
+
+		return view('home.interactivepractice_fries',$this->data);
+	}
 
 	public function exams($type,Request $request)
 	{
@@ -386,6 +413,19 @@ class StaticsController extends Controller {
 					'type' => 'Interactive',
 					'status' => 1
 				]);
+				$this->data['exams'][] = $exam->toArray();
+
+			}
+			// Custom Create Fries Station
+			if(Exams::where('code','fries')->count()<1){
+				$exam = Exams::create([
+					'code' => 'fries',
+					'title' => 'Fries Station',
+					'items' => 5,
+					'attempts' => 3,
+					'type' => 'Interactive',
+					'status' => 1
+				]);
 
 				$this->data['exams'][] = $exam->toArray();
 
@@ -408,6 +448,8 @@ class StaticsController extends Controller {
 					}
 					return view('home.exams',$this->data);
 				}
+
+
 				public function examsedit($id)
 				{
 					if(in_array($this->data['user']['level'],[4,3,2])){

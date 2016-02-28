@@ -52,6 +52,12 @@ Route::get('/assessment/interactivepractice/spaghetti', 'StaticsController@inter
 
 Route::post('/form/saveAnswerInteractivespaghetti', 'FormsController@saveAnswerInteractivespaghetti');
 Route::post('/form/saveAnswerInteractivePracticespaghetti', 'FormsController@saveAnswerInteractivePracticespaghetti');
+// Fries
+Route::get('/assessment/interactive/fries', 'StaticsController@interactive_fries');
+Route::get('/assessment/interactivepractice/fries', 'StaticsController@interactivepractice_fries');
+
+Route::post('/form/saveAnswerInteractivefries', 'FormsController@saveAnswerInteractivefries');
+Route::post('/form/saveAnswerInteractivePracticefries', 'FormsController@saveAnswerInteractivePracticefries');
 
 
 Route::get('/assessment/interactive/{id}', 'StaticsController@interactive');
